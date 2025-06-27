@@ -7,8 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Lightbulb, Bot, Activity, BookOpen, Wind, Music, PenSquare, StretchVertical, Sparkles, Coffee, Film, Smile, Leaf, Heart } from 'lucide-react';
+import { Loader2, Lightbulb, Bot } from 'lucide-react';
 import type { Mood } from './mood-selector';
+import { ActivityCard } from './activity-card';
 
 interface JournalEditorProps {
   mood: Mood;
@@ -17,27 +18,6 @@ interface JournalEditorProps {
   suggestions: SuggestSelfCareActivitiesOutput | null;
   isLoading: boolean;
 }
-
-const iconMap: { [key: string]: React.ElementType } = {
-  BookOpen,
-  Wind,
-  Music,
-  PenSquare,
-  StretchVertical,
-  Sparkles,
-  Coffee,
-  Film,
-  Smile,
-  Leaf,
-  Heart,
-  default: Activity,
-};
-
-const ActivityIcon = ({ name }: { name: string }) => {
-  const Icon = iconMap[name] || iconMap.default;
-  return <Icon className="h-6 w-6 text-accent-foreground" />;
-};
-
 
 export function JournalEditor({
   mood,
@@ -110,16 +90,8 @@ export function JournalEditor({
                <CardDescription>{suggestions.reasoning}</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
-              {suggestions.activities.map((activity) => (
-                <div key={activity.name} className="flex items-start gap-4 p-4 rounded-lg bg-background shadow-sm">
-                  <div className="p-3 bg-accent rounded-full">
-                    <ActivityIcon name={activity.icon} />
-                  </div>
-                  <div>
-                    <p className="font-semibold">{activity.name}</p>
-                    <p className="text-sm text-muted-foreground">{activity.description}</p>
-                  </div>
-                </div>
+              {suggestions.activities.map((activity, index) => (
+                <ActivityCard key={index} activity={activity} />
               ))}
             </CardContent>
           </Card>
