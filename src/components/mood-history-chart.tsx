@@ -1,8 +1,8 @@
 'use client';
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 
 const chartData = [
   { day: 'Mon', mood: 4 },
@@ -37,8 +37,7 @@ export function MoodHistoryChart() {
         <CardDescription>Here's a look at your mood this week.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="h-[250px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
+        <ChartContainer config={chartConfig} className="h-[250px] w-full">
             <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="day" tickLine={false} axisLine={false} />
@@ -59,10 +58,9 @@ export function MoodHistoryChart() {
                     )}
                 />}
               />
-              <Bar dataKey="mood" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="mood" fill="var(--color-mood)" radius={[4, 4, 0, 0]} />
             </BarChart>
-          </ResponsiveContainer>
-        </div>
+        </ChartContainer>
       </CardContent>
     </Card>
   );
