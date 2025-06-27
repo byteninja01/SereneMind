@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Lightbulb, Bot } from 'lucide-react';
 import type { Mood } from './mood-selector';
 import { ActivityCard } from './activity-card';
+import { Skeleton } from './ui/skeleton';
 
 interface JournalEditorProps {
   mood: Mood;
@@ -41,7 +42,7 @@ export function JournalEditor({
           Tell me more about feeling {mood.name}...
         </CardTitle>
         <CardDescription>
-          You can write about what's on your mind, or just get some activity suggestions.
+          Your personalized suggestions are below. You can also write about what's on your mind to get AI feedback and refined suggestions.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -53,19 +54,33 @@ export function JournalEditor({
             onChange={(e) => setJournalText(e.target.value)}
             disabled={isLoading}
           />
-          <Button type="submit" className="mt-4" disabled={isLoading}>
-            {isLoading ? (
+          <Button
+            type="submit"
+            className="mt-4"
+            disabled={isLoading || !journalText.trim()}
+          >
+            {isLoading && journalText.trim() ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {journalText.trim() ? 'Analyzing...' : 'Getting Suggestions...'}
+                Analyzing...
               </>
-            ) : journalText.trim() ? (
-              'Analyze My Entry'
             ) : (
-              'Get Suggestions'
+              'Analyze & Refine Suggestions'
             )}
           </Button>
         </form>
+
+        {isLoading && !analysis && !suggestions && (
+          <div className="mt-6 space-y-4">
+             <div className="flex items-center gap-2 text-muted-foreground">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                <span>Thinking of some suggestions for you...</span>
+            </div>
+            <Skeleton className="h-24 w-full rounded-lg" />
+            <Skeleton className="h-24 w-full rounded-lg" />
+            <Skeleton className="h-24 w-full rounded-lg" />
+          </div>
+        )}
 
         {analysis && (
           <Card className="mt-6 bg-secondary/50">

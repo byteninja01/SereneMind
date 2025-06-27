@@ -2,7 +2,7 @@
 
 import type { SuggestSelfCareActivitiesOutput } from '@/ai/flows/suggest-self-care-activities';
 import { Timer } from './timer';
-import { BookOpen, Wind, Music, PenSquare, StretchVertical, Sparkles, Coffee, Film, Smile, Leaf, Heart, Gamepad2, Brain, Clock, Activity, Youtube } from 'lucide-react';
+import { BookOpen, Wind, Music, PenSquare, StretchVertical, Sparkles, Coffee, Film, Smile, Leaf, Heart, Gamepad2, Brain, Clock, Activity, Youtube, Users, Brush } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
@@ -28,6 +28,8 @@ const iconMap: { [key: string]: React.ElementType } = {
   Gamepad2,
   Brain,
   Clock,
+  Users,
+  Brush,
   default: Activity,
 };
 
@@ -37,7 +39,7 @@ const ActivityIcon = ({ name }: { name: string }) => {
 };
 
 export function ActivityCard({ activity }: ActivityCardProps) {
-    const hasTimer = (activity.type === 'exercise' || activity.type === 'mindfulness') && activity.duration && activity.duration > 0;
+    const hasTimer = (activity.type === 'movement' || activity.type === 'mindfulness') && activity.duration && activity.duration > 0;
     
     return (
         <div key={activity.name} className="flex items-start gap-4 p-4 rounded-lg bg-background shadow-sm">
@@ -50,22 +52,18 @@ export function ActivityCard({ activity }: ActivityCardProps) {
                 
                 {activity.type === 'music' && activity.details && (
                     (() => {
-                        const parts = activity.details.split(' by ');
-                        const title = parts[0] || 'Unknown Title';
-                        const artist = parts.length > 1 ? parts.slice(1).join(' by ') : 'Unknown Artist';
                         const query = encodeURIComponent(activity.details);
                         const youtubeUrl = `https://www.youtube.com/results?search_query=${query}`;
 
                         return (
                             <div className="mt-2 space-y-2">
                                 <div className="text-sm bg-secondary/30 p-3 rounded-md border border-secondary">
-                                    <p><strong>Song:</strong> {title.trim()}</p>
-                                    <p><strong>Artist:</strong> {artist.trim()}</p>
+                                    <p><strong>Playlist Idea:</strong> {activity.details}</p>
                                 </div>
                                 <Button variant="outline" size="sm" asChild>
                                     <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
                                         <Youtube className="mr-2" />
-                                        Play on YouTube
+                                        Find on YouTube
                                     </a>
                                 </Button>
                             </div>

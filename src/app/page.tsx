@@ -57,11 +57,29 @@ export default function Home() {
     }
   }, [chatMessages]);
 
-  const handleMoodSelect = (selectedMood: Mood) => {
+  const handleMoodSelect = async (selectedMood: Mood) => {
     setMood(selectedMood);
     setJournal('');
     setAnalysis(null);
     setSuggestions(null);
+    setIsLoading(true);
+
+    try {
+      const suggestionsResult = await suggestSelfCareActivities({
+        mood: selectedMood.name,
+        journalContent: '',
+      });
+      setSuggestions(suggestionsResult);
+    } catch (error) {
+      console.error('AI operation failed:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem getting suggestions. Please try again.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleJournalSubmit = async (journalText: string) => {
@@ -73,22 +91,12 @@ export default function Home() {
     setSuggestions(null);
 
     try {
-      // If there's no journal text, just get suggestions.
-      if (!journalText.trim()) {
-        const suggestionsResult = await suggestSelfCareActivities({
-          mood: mood.name,
-          journalContent: '',
-        });
-        setSuggestions(suggestionsResult);
-      } else {
-        // If there is journal text, get both analysis and suggestions.
-        const [analysisResult, suggestionsResult] = await Promise.all([
-          analyzeJournalEntry({ journalEntry: journalText }),
-          suggestSelfCareActivities({ mood: mood.name, journalContent: journalText }),
-        ]);
-        setAnalysis(analysisResult);
-        setSuggestions(suggestionsResult);
-      }
+      const [analysisResult, suggestionsResult] = await Promise.all([
+        analyzeJournalEntry({ journalEntry: journalText }),
+        suggestSelfCareActivities({ mood: mood.name, journalContent: journalText }),
+      ]);
+      setAnalysis(analysisResult);
+      setSuggestions(suggestionsResult);
     } catch (error) {
       console.error('AI operation failed:', error);
       toast({
