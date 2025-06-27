@@ -30,9 +30,7 @@ export function JournalEditor({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (journalText.trim()) {
-      onJournalSubmit(journalText);
-    }
+    onJournalSubmit(journalText);
   };
 
   return (
@@ -43,7 +41,7 @@ export function JournalEditor({
           Tell me more about feeling {mood.name}...
         </CardTitle>
         <CardDescription>
-          Writing can be a great way to understand your feelings. What's on your mind?
+          You can write about what's on your mind, or just get some activity suggestions.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -55,14 +53,16 @@ export function JournalEditor({
             onChange={(e) => setJournalText(e.target.value)}
             disabled={isLoading}
           />
-          <Button type="submit" className="mt-4" disabled={isLoading || !journalText.trim()}>
+          <Button type="submit" className="mt-4" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Analyzing...
+                {journalText.trim() ? 'Analyzing...' : 'Getting Suggestions...'}
               </>
-            ) : (
+            ) : journalText.trim() ? (
               'Analyze My Entry'
+            ) : (
+              'Get Suggestions'
             )}
           </Button>
         </form>

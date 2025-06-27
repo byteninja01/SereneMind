@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { MoodSelector, type Mood } from '@/components/mood-selector';
 import { JournalEditor } from '@/components/journal-editor';
 import { MoodHistoryChart } from '@/components/mood-history-chart';
+import { SmartwatchSync } from '@/components/smartwatch-sync';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Logo } from '@/components/icons';
 import { useToast } from '@/hooks/use-toast';
@@ -68,14 +69,26 @@ export default function Home() {
 
     setIsLoading(true);
     setJournal(journalText);
+    setAnalysis(null);
+    setSuggestions(null);
 
     try {
-      const [analysisResult, suggestionsResult] = await Promise.all([
-        analyzeJournalEntry({ journalEntry: journalText }),
-        suggestSelfCareActivities({ mood: mood.name, journalContent: journalText }),
-      ]);
-      setAnalysis(analysisResult);
-      setSuggestions(suggestionsResult);
+      // If there's no journal text, just get suggestions.
+      if (!journalText.trim()) {
+        const suggestionsResult = await suggestSelfCareActivities({
+          mood: mood.name,
+          journalContent: '',
+        });
+        setSuggestions(suggestionsResult);
+      } else {
+        // If there is journal text, get both analysis and suggestions.
+        const [analysisResult, suggestionsResult] = await Promise.all([
+          analyzeJournalEntry({ journalEntry: journalText }),
+          suggestSelfCareActivities({ mood: mood.name, journalContent: journalText }),
+        ]);
+        setAnalysis(analysisResult);
+        setSuggestions(suggestionsResult);
+      }
     } catch (error) {
       console.error('AI operation failed:', error);
       toast({
@@ -163,6 +176,7 @@ export default function Home() {
 
             <div className="lg:col-span-1 grid gap-8 auto-rows-min">
               <MoodHistoryChart />
+              <SmartwatchSync />
               <Card className="bg-accent/50 border-accent">
                 <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
                   <div className="bg-accent rounded-full p-2">
