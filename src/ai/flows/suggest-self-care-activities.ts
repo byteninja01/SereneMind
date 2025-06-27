@@ -23,9 +23,16 @@ export type SuggestSelfCareActivitiesInput = z.infer<
   typeof SuggestSelfCareActivitiesInputSchema
 >;
 
+const ActivitySchema = z.object({
+    name: z.string().describe('The name of the activity, including the time bound (e.g., "Meditate for 5 minutes").'),
+    description: z.string().describe('A short, encouraging description of the activity and why it might be helpful.'),
+    icon: z.string().describe(`A single, relevant lucide-react icon name for the activity. Choose from this specific list: 'BookOpen', 'Wind', 'Music', 'PenSquare', 'StretchVertical', 'Sparkles', 'Coffee', 'Film', 'Smile', 'Leaf', 'Heart'`)
+});
+
+
 const SuggestSelfCareActivitiesOutputSchema = z.object({
   activities: z
-    .array(z.string())
+    .array(ActivitySchema)
     .describe('A list of suggested self-care activities.'),
   reasoning: z
     .string()
@@ -46,9 +53,12 @@ const prompt = ai.definePrompt({
   input: {schema: SuggestSelfCareActivitiesInputSchema},
   output: {schema: SuggestSelfCareActivitiesOutputSchema},
   prompt: `Based on the user's current mood: {{{mood}}} and their journal content: {{{journalContent}}},
-suggest a list of personalized and time-bound self-care activities. Also, explain the reasoning behind suggesting these activities.
+suggest a list of 3 personalized and time-bound self-care activities. Also, explain the reasoning behind suggesting these activities.
 Activities should be fun and promote well-being.
-Keep activities time-bound and provide the time in minutes, e.g., meditate for 5 minutes.
+For each activity, provide:
+1.  A 'name' that includes a time-bound, e.g., "Meditate for 5 minutes".
+2.  A short, encouraging 'description'.
+3.  An 'icon' name from this specific list: 'BookOpen', 'Wind', 'Music', 'PenSquare', 'StretchVertical', 'Sparkles', 'Coffee', 'Film', 'Smile', 'Leaf', 'Heart'. Choose the most relevant icon for the activity.
 `,
 });
 
