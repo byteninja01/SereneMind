@@ -8,14 +8,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Logo } from '@/components/icons';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 export default function LoginPage() {
   const [role, setRole] = useState('');
+  const [name, setName] = useState('');
   const router = useRouter();
 
   const handleContinue = () => {
-    if (role) {
+    if (role && name.trim()) {
       localStorage.setItem('userRole', role);
+      localStorage.setItem('userName', name.trim());
       router.push('/dashboard');
     }
   };
@@ -41,6 +44,15 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent className="space-y-4">
              <div className="grid w-full items-center gap-2">
+                <Label htmlFor="name-input">What should we call you?</Label>
+                <Input 
+                    id="name-input" 
+                    placeholder="Enter your name..." 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)}
+                />
+             </div>
+             <div className="grid w-full items-center gap-2">
                 <Label htmlFor="role-select">Tell us your primary role</Label>
                 <Select value={role} onValueChange={setRole}>
                     <SelectTrigger id="role-select">
@@ -57,7 +69,7 @@ export default function LoginPage() {
              </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full" onClick={handleContinue} disabled={!role}>
+            <Button className="w-full" onClick={handleContinue} disabled={!role || !name.trim()}>
               Continue to Dashboard
             </Button>
           </CardFooter>

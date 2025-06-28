@@ -37,15 +37,18 @@ export default function DashboardPage() {
   const [isChatLoading, setIsChatLoading] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
   const router = useRouter();
 
 
   useEffect(() => {
     const role = localStorage.getItem('userRole');
-    if (!role) {
+    const name = localStorage.getItem('userName');
+    if (!role || !name) {
       router.push('/');
     } else {
       setUserRole(role);
+      setUserName(name);
     }
 
     const messages = [
@@ -158,10 +161,11 @@ export default function DashboardPage() {
   
   const handleChangeRole = () => {
     localStorage.removeItem('userRole');
+    localStorage.removeItem('userName');
     router.push('/');
   }
 
-  if (!userRole) {
+  if (!userRole || !userName) {
       return (
           <div className="flex h-screen w-full items-center justify-center">
               <Loader2 className="h-8 w-8 animate-spin" />
@@ -180,7 +184,7 @@ export default function DashboardPage() {
           <div className="flex flex-1 items-center justify-end space-x-2">
             <Button variant="ghost" size="sm" onClick={handleChangeRole}>
               <User className="mr-2 h-4 w-4" />
-              <span className="capitalize">{userRole}</span>
+              <span className="capitalize">{userName} ({userRole})</span>
             </Button>
             <ThemeToggle />
           </div>
@@ -192,7 +196,7 @@ export default function DashboardPage() {
             <div className="lg:col-span-2 grid gap-8">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-headline text-2xl">How are you feeling today?</CardTitle>
+                  <CardTitle className="font-headline text-2xl">How are you feeling today, {userName}?</CardTitle>
                   <CardDescription>Select your current mood to get started.</CardDescription>
                 </CardHeader>
                 <CardContent>
