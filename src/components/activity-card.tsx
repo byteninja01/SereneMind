@@ -5,6 +5,7 @@ import { Timer } from './timer';
 import { BookOpen, Wind, Music, PenSquare, StretchVertical, Sparkles, Coffee, Film, Smile, Leaf, Heart, Gamepad2, Brain, Clock, Activity, Youtube, Users, Brush } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { PlayableGame } from './playable-game';
 
 
 type ActivityType = SuggestSelfCareActivitiesOutput['activities'][0];
@@ -84,9 +85,8 @@ export function ActivityCard({ activity }: ActivityCardProps) {
                                 <DialogTitle>{activity.name}</DialogTitle>
                                 <DialogDescription>{activity.description}</DialogDescription>
                             </DialogHeader>
-                             <div className="mt-4 text-sm">
-                                <p className="font-semibold mb-2">How to play:</p>
-                                <p className="whitespace-pre-wrap">{activity.details}</p>
+                             <div className="mt-4">
+                                <PlayableGame instructions={activity.details} />
                             </div>
                         </DialogContent>
                     </Dialog>

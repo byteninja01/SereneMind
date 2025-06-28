@@ -64,12 +64,12 @@ Also, explain the reasoning behind suggesting these activities based on their ro
 Activities should be fun and promote well-being. Include a mix of activity types: 'music', 'movement', 'game', 'mindfulness', 'creative', 'social'.
 
 For each activity, provide:
-1.  A 'name' that is descriptive, e.g., "5-Minute Guided Meditation", "Listen to a Calming Playlist", "Quick Desk Stretch", "2-minute Box Breathing".
+1.  A 'name' that is descriptive, e.g., "15-Second Focus Game", "Listen to a Calming Playlist", "Quick Desk Stretch", "2-minute Box Breathing".
 2.  A 'type' from the list: 'music', 'movement', 'game', 'mindfulness', 'creative', 'social'.
 3.  A short, encouraging 'description' of why it's helpful.
 4.  An 'icon' name from this specific list: 'BookOpen', 'Wind', 'Music', 'PenSquare', 'StretchVertical', 'Sparkles', 'Coffee', 'Film', 'Smile', 'Leaf', 'Heart', 'Gamepad2', 'Brain', 'Clock', 'Users', 'Brush'. Choose the most relevant icon.
 5.  If the activity is timer-based ('movement', 'mindfulness'), provide a 'duration' in seconds (e.g., 300 for 5 minutes).
-6.  If the activity is 'music', provide a YouTube playlist idea in the 'details' field (e.g., "Lo-fi beats for studying", "Upbeat 80s pop classics"). If the activity is 'game', provide simple game instructions in the 'details' field. For other types, this field can be omitted.
+6.  If the activity is 'music', provide a YouTube playlist idea in the 'details' field (e.g., "Lo-fi beats for studying", "Upbeat 80s pop classics"). If the activity is 'game', provide simple game instructions in the 'details' field for a clicker-style game. For example: "Click the target as many times as you can in 15 seconds to practice focus." For other types, this field can be omitted.
 `,
 });
 
