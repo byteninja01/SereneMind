@@ -17,7 +17,10 @@ const SuggestSelfCareActivitiesInputSchema = z.object({
     .describe('The current mood of the user (e.g., happy, sad, anxious).'),
   journalContent: z
     .string()
-    .describe('The content of the user\'s journal entry.'),
+    .describe("The content of the user's journal entry."),
+  userRole: z
+    .string()
+    .describe('The primary role of the user (e.g., student, teacher, employee).'),
 });
 export type SuggestSelfCareActivitiesInput = z.infer<
   typeof SuggestSelfCareActivitiesInputSchema
@@ -55,8 +58,9 @@ const prompt = ai.definePrompt({
   name: 'suggestSelfCareActivitiesPrompt',
   input: {schema: SuggestSelfCareActivitiesInputSchema},
   output: {schema: SuggestSelfCareActivitiesOutputSchema},
-  prompt: `Based on the user's current mood: {{{mood}}} and their journal content: {{{journalContent}}},
-suggest a list of 3 personalized self-care activities. Also, explain the reasoning behind suggesting these activities.
+  prompt: `Based on the user's primary role as a {{{userRole}}}, their current mood: {{{mood}}}, and their journal content: {{{journalContent}}},
+suggest a list of 3 personalized self-care activities. The activities should be tailored to the user's role. For example, a student might need focus-related activities, while an employee might need desk-based stretches.
+Also, explain the reasoning behind suggesting these activities based on their role and mood.
 Activities should be fun and promote well-being. Include a mix of activity types: 'music', 'movement', 'game', 'mindfulness', 'creative', 'social'.
 
 For each activity, provide:
