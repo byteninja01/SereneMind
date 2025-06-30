@@ -58,9 +58,13 @@ const prompt = ai.definePrompt({
   name: 'suggestSelfCareActivitiesPrompt',
   input: {schema: SuggestSelfCareActivitiesInputSchema},
   output: {schema: SuggestSelfCareActivitiesOutputSchema},
-  prompt: `Based on the user's primary role as a {{{userRole}}}, their current mood: {{{mood}}}, and their journal content: {{{journalContent}}},
-suggest a list of 3 personalized self-care activities. The activities should be tailored to the user's role. For example, a student might need focus-related activities, while an employee might need desk-based stretches.
-Also, explain the reasoning behind suggesting these activities based on their role and mood.
+  prompt: `You are a mental wellness coach. Based on the user's primary role as a {{{userRole}}}, their current mood: {{{mood}}}, and their journal content (if any): {{{journalContent}}}, suggest a list of 3 personalized self-care activities. Also, explain the reasoning behind suggesting these activities based on their role and mood.
+
+Here's how to tailor the suggestions:
+- If the user is a 'student', suggest activities that help with focus, managing academic stress, and taking effective study breaks. For example, focus games, short mindfulness exercises, or creative outlets to decompress.
+- If the user is a 'teacher', suggest activities that help with unwinding after a long day of teaching, managing classroom-related stress, and maintaining a healthy work-life balance. For example, calming activities, stretches to relieve physical tension, or hobbies that are completely unrelated to work.
+- For all other roles ('employee', 'business owner', 'other'), provide suggestions that focus on workplace well-being, such as desk-based stretches, short mindfulness breaks to reset during a busy day, or activities that promote a sense of accomplishment outside of work.
+
 Activities should be fun and promote well-being. Include a mix of activity types: 'music', 'movement', 'game', 'mindfulness', 'creative', 'social'.
 
 For each activity, provide:
