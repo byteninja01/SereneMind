@@ -10,6 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { MoodSelector, type Mood } from '@/components/mood-selector';
 import { JournalEditor } from '@/components/journal-editor';
 import { MoodHistoryChart } from '@/components/mood-history-chart';
+import { NotificationHistoryChart } from '@/components/notification-history-chart';
 import { SmartwatchSync } from '@/components/smartwatch-sync';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Logo } from '@/components/icons';
@@ -24,6 +25,19 @@ interface ChatMessage {
   sender: 'user' | 'bot';
 }
 
+export interface AppNotification {
+  message: string;
+  time: Date;
+}
+
+const REMINDER_MESSAGES = [
+  "Remember to drink some water. Stay hydrated!",
+  "Feeling stressed? Take a few deep breaths. You are in control.",
+  "Stay positive! A good attitude can make all the difference.",
+  "Take a short break to stretch and reset your mind.",
+  "Be kind to yourself today. You deserve it."
+];
+
 export default function DashboardPage() {
   const [mood, setMood] = useState<Mood | null>(null);
   const [journal, setJournal] = useState('');
@@ -31,7 +45,7 @@ export default function DashboardPage() {
   const [suggestions, setSuggestions] = useState<SuggestSelfCareActivitiesOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const [message, setMessage] = useState(''); // State for the random reminder message
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]); // State for chat messages
   const [chatInput, setChatInput] = useState('');
   const [isChatLoading, setIsChatLoading] = useState(false);
@@ -44,7 +58,9 @@ export default function DashboardPage() {
   useEffect(() => {
     const role = localStorage.getItem('userRole');
     const name = localStorage.getItem('userName');
-    if (!role || !name) {
+    const phone = localStorage.getItem('userPhone');
+
+    if (!role || !name || !phone) {
       router.push('/');
       return;
     } 
@@ -52,19 +68,14 @@ export default function DashboardPage() {
     setUserRole(role);
     setUserName(name);
 
-    const messages = [
-      "Remember to drink some water. Stay hydrated!",
-      "Feeling stressed? Take a few deep breaths. You are in control.",
-      "Stay positive! A good attitude can make all the difference.",
-      "Take a short break to stretch and reset your mind.",
-      "Be kind to yourself today. You deserve it."
-    ];
-
-    // Set initial message
-    setMessage(messages[Math.floor(Math.random() * messages.length)]);
+    // Set initial reminder
+    setNotifications([{ message: "Welcome! We'll send you reminders here.", time: new Date() }]);
     
     const intervalId = setInterval(() => {
-      setMessage(messages[Math.floor(Math.random() * messages.length)]);
+      setNotifications(prev => [...prev, {
+        message: REMINDER_MESSAGES[Math.floor(Math.random() * REMINDER_MESSAGES.length)],
+        time: new Date()
+      }]);
     }, 30000); // 30 seconds
 
     // Add a welcome message from the bot
@@ -177,6 +188,7 @@ export default function DashboardPage() {
   const handleChangeRole = () => {
     localStorage.removeItem('userRole');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userPhone');
     router.push('/');
   }
 
@@ -187,6 +199,8 @@ export default function DashboardPage() {
           </div>
       );
   }
+
+  const latestNotification = notifications[notifications.length - 1];
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -233,6 +247,7 @@ export default function DashboardPage() {
             <div className="lg:col-span-1 grid gap-8 auto-rows-min">
               <MoodHistoryChart />
               <SmartwatchSync />
+              <NotificationHistoryChart notifications={notifications} />
               <Card className="bg-accent/50 border-accent">
                 <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
                   <div className="bg-accent rounded-full p-2">
@@ -241,7 +256,7 @@ export default function DashboardPage() {
                   <CardTitle className="font-headline">A Quick Reminder</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">{message}</p>
+                  <p className="text-muted-foreground">{latestNotification?.message}</p>
                 </CardContent>
               </Card>
 

@@ -13,12 +13,14 @@ import { Input } from '@/components/ui/input';
 export default function LoginPage() {
   const [role, setRole] = useState('');
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const router = useRouter();
 
   const handleContinue = () => {
-    if (role && name.trim()) {
+    if (role && name.trim() && phone.trim()) {
       localStorage.setItem('userRole', role);
       localStorage.setItem('userName', name.trim());
+      localStorage.setItem('userPhone', phone.trim());
       router.push('/dashboard');
     }
   };
@@ -53,6 +55,17 @@ export default function LoginPage() {
                 />
              </div>
              <div className="grid w-full items-center gap-2">
+                <Label htmlFor="phone-input">What is your phone number?</Label>
+                <Input 
+                    id="phone-input" 
+                    type="tel"
+                    placeholder="Enter your phone number..." 
+                    value={phone} 
+                    onChange={(e) => setPhone(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">We'll use this to send you friendly reminders (feature simulation).</p>
+             </div>
+             <div className="grid w-full items-center gap-2">
                 <Label htmlFor="role-select">Tell us your primary role</Label>
                 <Select value={role} onValueChange={setRole}>
                     <SelectTrigger id="role-select">
@@ -69,7 +82,7 @@ export default function LoginPage() {
              </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full" onClick={handleContinue} disabled={!role || !name.trim()}>
+            <Button className="w-full" onClick={handleContinue} disabled={!role || !name.trim() || !phone.trim()}>
               Continue to Dashboard
             </Button>
           </CardFooter>
