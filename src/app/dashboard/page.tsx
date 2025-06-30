@@ -46,21 +46,36 @@ export default function DashboardPage() {
     const name = localStorage.getItem('userName');
     if (!role || !name) {
       router.push('/');
-    } else {
-      setUserRole(role);
-      setUserName(name);
-    }
+      return;
+    } 
+    
+    setUserRole(role);
+    setUserName(name);
 
     const messages = [
-      "You're doing great just by being here.",
-      "Every step, big or small, is progress.",
-      "Be kind to yourself today.",
-      "Your feelings are valid. Acknowledge them.",
-      "Taking time for yourself is productive."
+      "Remember to drink some water. Stay hydrated!",
+      "Feeling stressed? Take a few deep breaths. You are in control.",
+      "Stay positive! A good attitude can make all the difference.",
+      "Take a short break to stretch and reset your mind.",
+      "Be kind to yourself today. You deserve it."
     ];
+
+    // Set initial message
     setMessage(messages[Math.floor(Math.random() * messages.length)]);
+    
+    const intervalId = setInterval(() => {
+      setMessage(messages[Math.floor(Math.random() * messages.length)]);
+    }, 30000); // 30 seconds
+
     // Add a welcome message from the bot
-    setChatMessages([{ id: 1, text: "Hello! I'm SereneMind, your friendly companion. How can I help you today?", sender: 'bot' }]);
+    setChatMessages(prev => {
+        if(prev.length === 0){
+            return [{ id: 1, text: "Hello! I'm SereneMind, your friendly companion. How can I help you today?", sender: 'bot' }];
+        }
+        return prev;
+    });
+
+    return () => clearInterval(intervalId);
   }, [router]);
 
   useEffect(() => {
