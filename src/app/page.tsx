@@ -9,21 +9,28 @@ import { Logo } from '@/components/icons';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Testimonials } from '@/components/testimonials';
 
 export default function LoginPage() {
   const [role, setRole] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
   const router = useRouter();
 
   const handleContinue = () => {
-    if (role && name.trim() && phone.trim()) {
+    if (role && name.trim() && phone.trim().length === 10 && age && gender) {
       localStorage.setItem('userRole', role);
       localStorage.setItem('userName', name.trim());
       localStorage.setItem('userPhone', phone.trim());
+      localStorage.setItem('userAge', age);
+      localStorage.setItem('userGender', gender);
       router.push('/dashboard');
     }
   };
+
+  const isContinueDisabled = !role || !name.trim() || phone.trim().length !== 10 || !age || !gender;
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -38,7 +45,7 @@ export default function LoginPage() {
           </div>
         </div>
       </header>
-      <main className="flex-1 flex items-center justify-center">
+      <main className="flex-1 flex flex-col items-center justify-center py-12">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader>
             <CardTitle className="font-headline text-2xl text-center">Welcome to SereneMind</CardTitle>
@@ -55,13 +62,38 @@ export default function LoginPage() {
                 />
              </div>
              <div className="grid w-full items-center gap-2">
+                <Label htmlFor="age-input">How old are you?</Label>
+                <Input 
+                    id="age-input" 
+                    type="number"
+                    placeholder="Enter your age..." 
+                    value={age} 
+                    onChange={(e) => setAge(e.target.value)}
+                />
+             </div>
+             <div className="grid w-full items-center gap-2">
+                <Label htmlFor="gender-select">What is your gender?</Label>
+                <Select value={gender} onValueChange={setGender}>
+                    <SelectTrigger id="gender-select">
+                        <SelectValue placeholder="Select your gender..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                    </SelectContent>
+                </Select>
+             </div>
+             <div className="grid w-full items-center gap-2">
                 <Label htmlFor="phone-input">What is your phone number?</Label>
                 <Input 
                     id="phone-input" 
                     type="tel"
-                    placeholder="Enter your phone number..." 
+                    maxLength={10}
+                    placeholder="Enter your 10-digit phone number..." 
                     value={phone} 
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
                 />
                 <p className="text-xs text-muted-foreground">We'll use this to send you friendly reminders (feature simulation).</p>
              </div>
@@ -82,11 +114,12 @@ export default function LoginPage() {
              </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full" onClick={handleContinue} disabled={!role || !name.trim() || !phone.trim()}>
+            <Button className="w-full" onClick={handleContinue} disabled={isContinueDisabled}>
               Continue to Dashboard
             </Button>
           </CardFooter>
         </Card>
+        <Testimonials />
       </main>
     </div>
   );

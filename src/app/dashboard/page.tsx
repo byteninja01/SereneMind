@@ -15,9 +15,11 @@ import { SmartwatchSync } from '@/components/smartwatch-sync';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Logo } from '@/components/icons';
 import { useToast } from '@/hooks/use-toast';
-import { Smile, Loader2, User } from 'lucide-react';
+import { Smile, Loader2, User, LogOut } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { DailyRoutine } from '@/components/daily-routine';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
 
 // Define interface for chat messages
 interface ChatMessage {
@@ -60,8 +62,10 @@ export default function DashboardPage() {
     const role = localStorage.getItem('userRole');
     const name = localStorage.getItem('userName');
     const phone = localStorage.getItem('userPhone');
+    const age = localStorage.getItem('userAge');
+    const gender = localStorage.getItem('userGender');
 
-    if (!role || !name || !phone) {
+    if (!role || !name || !phone || !age || !gender) {
       router.push('/');
       return;
     } 
@@ -186,10 +190,12 @@ export default function DashboardPage() {
     }
   };
   
-  const handleChangeRole = () => {
+  const handleLogout = () => {
     localStorage.removeItem('userRole');
     localStorage.removeItem('userName');
     localStorage.removeItem('userPhone');
+    localStorage.removeItem('userAge');
+    localStorage.removeItem('userGender');
     router.push('/');
   }
 
@@ -212,10 +218,20 @@ export default function DashboardPage() {
             <h1 className="text-xl font-bold font-headline">SereneMind</h1>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2">
-            <Button variant="ghost" size="sm" onClick={handleChangeRole}>
-              <User className="mr-2 h-4 w-4" />
-              <span className="capitalize">{userName} ({userRole})</span>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <User className="mr-2 h-4 w-4" />
+                  <span className="capitalize">{userName} ({userRole})</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <ThemeToggle />
           </div>
         </div>
