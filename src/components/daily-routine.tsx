@@ -45,9 +45,28 @@ export function DailyRoutine({ userRole }: DailyRoutineProps) {
       if (!userRole) return;
       setIsLoading(true);
       setError(null);
+
+      // Check for cached routine in localStorage
+      const cachedRoutineKey = `dailyRoutine-${userRole}`;
+      const cachedRoutine = localStorage.getItem(cachedRoutineKey);
+      if (cachedRoutine) {
+        try {
+          setRoutine(JSON.parse(cachedRoutine));
+          setIsLoading(false);
+          return;
+        } catch (e) {
+          console.error("Failed to parse cached routine:", e);
+          // Clear invalid cache entry
+          localStorage.removeItem(cachedRoutineKey);
+        }
+      }
+
+      // If not cached, fetch from AI
       try {
         const result = await generateDailyRoutine({ userRole });
         setRoutine(result);
+        // Cache the new routine
+        localStorage.setItem(cachedRoutineKey, JSON.stringify(result));
       } catch (err) {
         console.error("Failed to generate daily routine:", err);
         setError("Could not generate a personalized routine at this time. Please try again later.");
