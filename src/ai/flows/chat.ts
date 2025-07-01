@@ -20,6 +20,10 @@ const ChatOutputSchema = z.object({
 });
 export type ChatOutput = z.infer<typeof ChatOutputSchema>;
 
+const fallbackResponse: ChatOutput = {
+    response: "I'm experiencing a high volume of requests right now and need a moment to catch my breath. Please try again in a little bit!",
+};
+
 export async function chat(input: ChatInput): Promise<ChatOutput> {
   return chatFlow(input);
 }
@@ -41,7 +45,12 @@ const chatFlow = ai.defineFlow(
     outputSchema: ChatOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    try {
+        const {output} = await prompt(input);
+        return output!;
+    } catch (e) {
+        console.error("Error in chatFlow, returning fallback.", e);
+        return fallbackResponse;
+    }
   }
 );
