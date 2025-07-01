@@ -78,13 +78,17 @@ export function DailyRoutine({ userRole }: DailyRoutineProps) {
         setRoutine(result);
         // Cache the new routine
         localStorage.setItem(cachedRoutineKey, JSON.stringify(result));
-      } catch (err) {
+      } catch (err: any) {
         console.error("Failed to generate daily routine:", err);
-        if (err instanceof Error && (err.message.includes('429') || err.message.includes('quota'))) {
+        const errorMessage = err?.message || '';
+        
+        // Always show a fallback routine on any error to prevent crashing
+        setRoutine(fallbackRoutine);
+
+        if (errorMessage.includes('429') || errorMessage.includes('quota')) {
             setError("You've reached the daily limit for AI routines. Here is a sample to get you started!");
-            setRoutine(fallbackRoutine);
         } else {
-            setError("Could not generate a personalized routine at this time. Please try again later.");
+            setError("Could not generate a personalized routine at this time. Here's a sample to get you going!");
         }
       } finally {
         setIsLoading(false);
