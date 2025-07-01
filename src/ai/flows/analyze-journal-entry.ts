@@ -24,6 +24,11 @@ const AnalyzeJournalEntryOutputSchema = z.object({
 });
 export type AnalyzeJournalEntryOutput = z.infer<typeof AnalyzeJournalEntryOutputSchema>;
 
+const fallbackAnalysis: AnalyzeJournalEntryOutput = {
+    feedbackSummary: "Our AI is currently processing a high volume of entries. While it's catching up, know that taking the time to write down your thoughts is a valuable step in itself.",
+    emotionalTags: ["reflection", "self-awareness"]
+};
+
 export async function analyzeJournalEntry(input: AnalyzeJournalEntryInput): Promise<AnalyzeJournalEntryOutput> {
   return analyzeJournalEntryFlow(input);
 }
@@ -46,7 +51,12 @@ const analyzeJournalEntryFlow = ai.defineFlow(
     outputSchema: AnalyzeJournalEntryOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    try {
+        const {output} = await prompt(input);
+        return output!;
+    } catch (e) {
+        console.error("Error in analyzeJournalEntryFlow, returning fallback.", e);
+        return fallbackAnalysis;
+    }
   }
 );
