@@ -17,11 +17,13 @@ export type ChatInput = z.infer<typeof ChatInputSchema>;
 
 const ChatOutputSchema = z.object({
     response: z.string().describe("The AI's response."),
+    isFallback: z.boolean().optional().describe('Indicates if the response is a fallback due to system overload.'),
 });
 export type ChatOutput = z.infer<typeof ChatOutputSchema>;
 
 const fallbackResponse: ChatOutput = {
     response: "I'm experiencing a high volume of requests right now and need a moment to catch my breath. Please try again in a little bit!",
+    isFallback: true,
 };
 
 export async function chat(input: ChatInput): Promise<ChatOutput> {

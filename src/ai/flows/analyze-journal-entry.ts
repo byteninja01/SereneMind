@@ -21,12 +21,14 @@ export type AnalyzeJournalEntryInput = z.infer<typeof AnalyzeJournalEntryInputSc
 const AnalyzeJournalEntryOutputSchema = z.object({
   feedbackSummary: z.string().describe('A short feedback summary of the journal entry.'),
   emotionalTags: z.array(z.string()).describe('A list of emotional tags identified in the journal entry.'),
+  isFallback: z.boolean().optional().describe('Indicates if the response is a fallback due to system overload.'),
 });
 export type AnalyzeJournalEntryOutput = z.infer<typeof AnalyzeJournalEntryOutputSchema>;
 
 const fallbackAnalysis: AnalyzeJournalEntryOutput = {
     feedbackSummary: "Our AI is currently processing a high volume of entries. While it's catching up, know that taking the time to write down your thoughts is a valuable step in itself.",
-    emotionalTags: ["reflection", "self-awareness"]
+    emotionalTags: ["reflection", "self-awareness"],
+    isFallback: true,
 };
 
 export async function analyzeJournalEntry(input: AnalyzeJournalEntryInput): Promise<AnalyzeJournalEntryOutput> {

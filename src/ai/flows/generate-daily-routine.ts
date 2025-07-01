@@ -46,6 +46,7 @@ const GenerateDailyRoutineOutputSchema = z.object({
     .describe(
       "A catchy title for the routine, e.g., 'A Balanced Day for a Teacher'."
     ),
+  isFallback: z.boolean().optional().describe('Indicates if the response is a fallback due to system overload.'),
 });
 export type GenerateDailyRoutineOutput = z.infer<
   typeof GenerateDailyRoutineOutputSchema
@@ -59,7 +60,8 @@ const fallbackRoutine: GenerateDailyRoutineOutput = {
     { time: "12:00 PM - 1:00 PM", activity: "Mindful Lunch Break", description: "Step away from your desk and eat without distractions.", icon: "Coffee" },
     { time: "3:00 PM - 3:15 PM", activity: "Quick Recharge", description: "Take a short walk or do some simple stretches to reset.", icon: "Dumbbell" },
     { time: "8:00 PM - 9:00 PM", activity: "Unwind Hour", description: "Read a book, listen to calming music, or do something creative.", icon: "BookOpen" },
-  ]
+  ],
+  isFallback: true,
 };
 
 export async function generateDailyRoutine(

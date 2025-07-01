@@ -52,6 +52,7 @@ export default function DashboardPage() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]); // State for chat messages
   const [chatInput, setChatInput] = useState('');
   const [isChatLoading, setIsChatLoading] = useState(false);
+  const [chatCooldown, setChatCooldown] = useState(0);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
@@ -101,6 +102,13 @@ export default function DashboardPage() {
     }
   }, [chatMessages]);
 
+  useEffect(() => {
+    if (chatCooldown > 0) {
+      const timerId = setTimeout(() => setChatCooldown(chatCooldown - 1), 1000);
+      return () => clearTimeout(timerId);
+    }
+  }, [chatCooldown]);
+
   const handleMoodSelect = async (selectedMood: Mood) => {
     if (!userRole) return;
     setMood(selectedMood);
@@ -116,6 +124,12 @@ export default function DashboardPage() {
         userRole: userRole,
       });
       setSuggestions(suggestionsResult);
+      if (suggestionsResult.isFallback) {
+        toast({
+          title: 'AI is a bit busy!',
+          description: "We're showing some sample suggestions for now. Please try refining with a journal entry later.",
+        });
+      }
     } catch (error) {
       console.error('AI operation failed:', error);
       toast({
@@ -143,6 +157,12 @@ export default function DashboardPage() {
       ]);
       setAnalysis(analysisResult);
       setSuggestions(suggestionsResult);
+      if (analysisResult.isFallback || suggestionsResult.isFallback) {
+        toast({
+            title: 'AI is a bit busy!',
+            description: "We're showing sample feedback and suggestions due to high demand. Your journal entry was saved.",
+        });
+      }
     } catch (error) {
       console.error('AI operation failed:', error);
       toast({
@@ -156,7 +176,7 @@ export default function DashboardPage() {
   };
 
   const handleSendChatMessage = async () => {
-    if (chatInput.trim() === '' || isChatLoading) return;
+    if (chatInput.trim() === '' || isChatLoading || chatCooldown > 0) return;
 
     const newMessage: ChatMessage = {
       id: chatMessages.length + 1,
@@ -177,6 +197,9 @@ export default function DashboardPage() {
         sender: 'bot',
       };
       setChatMessages(prevMessages => [...prevMessages, botResponse]);
+      if (aiResponse.isFallback) {
+        setChatCooldown(30);
+      }
     } catch (error) {
        console.error('Chat AI operation failed:', error);
        const errorResponse: ChatMessage = {
@@ -301,13 +324,13 @@ export default function DashboardPage() {
                   <div className="flex gap-2">
                     <Input
                       type="text"
-                      placeholder="Type your message..."
+                      placeholder={chatCooldown > 0 ? `Please wait ${chatCooldown}s...` : "Type your message..."}
                       value={chatInput}
                       onChange={(e) => setChatInput(e.target.value)}
                       onKeyPress={(e) => { if (e.key === 'Enter') handleSendChatMessage(); }}
-                      disabled={isChatLoading}
+                      disabled={isChatLoading || chatCooldown > 0}
                     />
-                    <Button onClick={handleSendChatMessage} disabled={isChatLoading}>Send</Button>
+                    <Button onClick={handleSendChatMessage} disabled={isChatLoading || chatCooldown > 0}>Send</Button>
                   </div>
                 </CardContent>
               </Card>

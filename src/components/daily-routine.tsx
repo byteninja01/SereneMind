@@ -65,7 +65,7 @@ export function DailyRoutine({ userRole }: DailyRoutineProps) {
           const parsedRoutine = JSON.parse(cachedRoutine);
           setRoutine(parsedRoutine);
           // Also check if the cached routine is the sample one
-          if (parsedRoutine.title.includes("(Sample)")) {
+          if (parsedRoutine.isFallback) {
              setError("You've reached the daily limit for AI routines, so we're showing a sample. Please try again later!");
           }
           setIsLoading(false);
@@ -82,7 +82,7 @@ export function DailyRoutine({ userRole }: DailyRoutineProps) {
         setRoutine(result);
         
         // Check if the result is the fallback and set an informational message
-        if (result.title.includes("(Sample)")) {
+        if (result.isFallback) {
             setError("You've reached the daily limit for AI routines, so we're showing a sample. Please try again later!");
         }
 

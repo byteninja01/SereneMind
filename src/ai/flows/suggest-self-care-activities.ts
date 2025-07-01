@@ -43,6 +43,7 @@ const SuggestSelfCareActivitiesOutputSchema = z.object({
   reasoning: z
     .string()
     .describe('The AI reasoning behind suggesting these activities.'),
+  isFallback: z.boolean().optional().describe('Indicates if the response is a fallback due to system overload.'),
 });
 export type SuggestSelfCareActivitiesOutput = z.infer<
   typeof SuggestSelfCareActivitiesOutputSchema
@@ -72,7 +73,8 @@ const fallbackSuggestions: SuggestSelfCareActivitiesOutput = {
       type: "music",
       details: "Calm instrumental music"
     }
-  ]
+  ],
+  isFallback: true,
 };
 
 export async function suggestSelfCareActivities(
