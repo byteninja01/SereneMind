@@ -51,6 +51,17 @@ export type GenerateDailyRoutineOutput = z.infer<
   typeof GenerateDailyRoutineOutputSchema
 >;
 
+const fallbackRoutine: GenerateDailyRoutineOutput = {
+  title: "A Gentle Daily Flow (Sample)",
+  routine: [
+    { time: "7:00 AM - 7:30 AM", activity: "Mindful Morning", description: "Start your day with 10 minutes of meditation or stretching.", icon: "Sunrise" },
+    { time: "8:00 AM - 8:30 AM", activity: "Nourishing Breakfast", description: "Enjoy a healthy breakfast to fuel your body and mind.", icon: "Salad" },
+    { time: "12:00 PM - 1:00 PM", activity: "Mindful Lunch Break", description: "Step away from your desk and eat without distractions.", icon: "Coffee" },
+    { time: "3:00 PM - 3:15 PM", activity: "Quick Recharge", description: "Take a short walk or do some simple stretches to reset.", icon: "Dumbbell" },
+    { time: "8:00 PM - 9:00 PM", activity: "Unwind Hour", description: "Read a book, listen to calming music, or do something creative.", icon: "BookOpen" },
+  ]
+};
+
 export async function generateDailyRoutine(
   input: GenerateDailyRoutineInput
 ): Promise<GenerateDailyRoutineOutput> {
@@ -86,7 +97,12 @@ const generateDailyRoutineFlow = ai.defineFlow(
     outputSchema: GenerateDailyRoutineOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    try {
+        const {output} = await prompt(input);
+        return output!;
+    } catch (e) {
+        console.error("Error in generateDailyRoutineFlow, returning fallback.", e);
+        return fallbackRoutine;
+    }
   }
 );

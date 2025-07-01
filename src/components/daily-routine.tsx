@@ -62,12 +62,16 @@ export function DailyRoutine({ userRole }: DailyRoutineProps) {
       const cachedRoutine = localStorage.getItem(cachedRoutineKey);
       if (cachedRoutine) {
         try {
-          setRoutine(JSON.parse(cachedRoutine));
+          const parsedRoutine = JSON.parse(cachedRoutine);
+          setRoutine(parsedRoutine);
+          // Also check if the cached routine is the sample one
+          if (parsedRoutine.title.includes("(Sample)")) {
+             setError("You've reached the daily limit for AI routines, so we're showing a sample. Please try again later!");
+          }
           setIsLoading(false);
           return;
         } catch (e) {
           console.error("Failed to parse cached routine:", e);
-          // Clear invalid cache entry
           localStorage.removeItem(cachedRoutineKey);
         }
       }
@@ -76,20 +80,18 @@ export function DailyRoutine({ userRole }: DailyRoutineProps) {
       try {
         const result = await generateDailyRoutine({ userRole });
         setRoutine(result);
-        // Cache the new routine
-        localStorage.setItem(cachedRoutineKey, JSON.stringify(result));
-      } catch (err: any) {
-        console.error("Failed to generate daily routine:", err);
-        const errorMessage = err?.message || '';
         
-        // Always show a fallback routine on any error to prevent crashing
-        setRoutine(fallbackRoutine);
-
-        if (errorMessage.includes('429') || errorMessage.includes('quota')) {
-            setError("You've reached the daily limit for AI routines. Here is a sample to get you started!");
-        } else {
-            setError("Could not generate a personalized routine at this time. Here's a sample to get you going!");
+        // Check if the result is the fallback and set an informational message
+        if (result.title.includes("(Sample)")) {
+            setError("You've reached the daily limit for AI routines, so we're showing a sample. Please try again later!");
         }
+
+        localStorage.setItem(cachedRoutineKey, JSON.stringify(result));
+      } catch (err) {
+        // This will now only catch network-level errors, etc.
+        console.error("Failed to fetch daily routine:", err);
+        setError("Could not connect to the server. Here's a sample routine to get you going!");
+        setRoutine(fallbackRoutine);
       } finally {
         setIsLoading(false);
       }
@@ -145,9 +147,9 @@ export function DailyRoutine({ userRole }: DailyRoutineProps) {
           </div>
         )}
         {error && (
-            <Alert variant={routine ? 'default' : 'destructive'}>
+            <Alert variant="default">
                 <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>{routine ? 'Note' : 'Error'}</AlertTitle>
+                <AlertTitle>Note</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
             </Alert>
         )}
