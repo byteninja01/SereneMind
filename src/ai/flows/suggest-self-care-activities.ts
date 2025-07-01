@@ -48,6 +48,33 @@ export type SuggestSelfCareActivitiesOutput = z.infer<
   typeof SuggestSelfCareActivitiesOutputSchema
 >;
 
+const fallbackSuggestions: SuggestSelfCareActivitiesOutput = {
+  reasoning: "We're experiencing high demand for AI suggestions right now. Here are a few popular activities to get you started while we catch up!",
+  activities: [
+    {
+      name: "2-minute Box Breathing",
+      description: "A simple breathing exercise to calm your nervous system and bring a sense of balance.",
+      icon: "Wind",
+      type: "mindfulness",
+      duration: 120,
+    },
+    {
+      name: "Quick Desk Stretch",
+      description: "Relieve tension in your neck, shoulders, and back with a few easy stretches you can do anywhere.",
+      icon: "StretchVertical",
+      type: "movement",
+      duration: 180,
+    },
+    {
+      name: "Listen to a calming playlist",
+      description: "Music is a powerful tool for shifting your mood. Find a playlist that helps you feel relaxed or uplifted.",
+      icon: "Music",
+      type: "music",
+      details: "Calm instrumental music"
+    }
+  ]
+};
+
 export async function suggestSelfCareActivities(
   input: SuggestSelfCareActivitiesInput
 ): Promise<SuggestSelfCareActivitiesOutput> {
@@ -84,7 +111,12 @@ const suggestSelfCareActivitiesFlow = ai.defineFlow(
     outputSchema: SuggestSelfCareActivitiesOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    try {
+        const {output} = await prompt(input);
+        return output!;
+    } catch (e) {
+        console.error("Error in suggestSelfCareActivitiesFlow, returning fallback.", e);
+        return fallbackSuggestions;
+    }
   }
 );
