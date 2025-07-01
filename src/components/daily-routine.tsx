@@ -33,6 +33,17 @@ const RoutineIcon = ({ name, className }: { name: string, className?: string }) 
   return <Icon className={cn("h-6 w-6", className)} />;
 };
 
+const fallbackRoutine: GenerateDailyRoutineOutput = {
+  title: "A Gentle Daily Flow (Sample)",
+  routine: [
+    { time: "7:00 AM - 7:30 AM", activity: "Mindful Morning", description: "Start your day with 10 minutes of meditation or stretching.", icon: "Sunrise" },
+    { time: "8:00 AM - 8:30 AM", activity: "Nourishing Breakfast", description: "Enjoy a healthy breakfast to fuel your body and mind.", icon: "Salad" },
+    { time: "12:00 PM - 1:00 PM", activity: "Mindful Lunch Break", description: "Step away from your desk and eat without distractions.", icon: "Coffee" },
+    { time: "3:00 PM - 3:15 PM", activity: "Quick Recharge", description: "Take a short walk or do some simple stretches to reset.", icon: "Dumbbell" },
+    { time: "8:00 PM - 9:00 PM", activity: "Unwind Hour", description: "Read a book, listen to calming music, or do something creative.", icon: "BookOpen" },
+  ]
+};
+
 
 export function DailyRoutine({ userRole }: DailyRoutineProps) {
   const [routine, setRoutine] = useState<GenerateDailyRoutineOutput | null>(null);
@@ -69,7 +80,12 @@ export function DailyRoutine({ userRole }: DailyRoutineProps) {
         localStorage.setItem(cachedRoutineKey, JSON.stringify(result));
       } catch (err) {
         console.error("Failed to generate daily routine:", err);
-        setError("Could not generate a personalized routine at this time. Please try again later.");
+        if (err instanceof Error && (err.message.includes('429') || err.message.includes('quota'))) {
+            setError("You've reached the daily limit for AI routines. Here is a sample to get you started!");
+            setRoutine(fallbackRoutine);
+        } else {
+            setError("Could not generate a personalized routine at this time. Please try again later.");
+        }
       } finally {
         setIsLoading(false);
       }
@@ -125,14 +141,14 @@ export function DailyRoutine({ userRole }: DailyRoutineProps) {
           </div>
         )}
         {error && (
-            <Alert variant="destructive">
+            <Alert variant={routine ? 'default' : 'destructive'}>
                 <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>{routine ? 'Note' : 'Error'}</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
             </Alert>
         )}
         {routine && (
-          <div className="relative">
+          <div className={cn("relative", error ? "mt-4" : "")}>
              <div className="absolute left-10 top-2 bottom-2 w-0.5 bg-border -z-10" />
              <ul className="space-y-6">
                 {routine.routine.map((item, index) => (
