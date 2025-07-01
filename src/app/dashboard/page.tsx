@@ -17,6 +17,7 @@ import { Logo } from '@/components/icons';
 import { useToast } from '@/hooks/use-toast';
 import { Smile, Loader2, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { DailyRoutine } from '@/components/daily-routine';
 
 // Define interface for chat messages
 interface ChatMessage {
@@ -245,6 +246,7 @@ export default function DashboardPage() {
             </div>
 
             <div className="lg:col-span-1 grid gap-8 auto-rows-min">
+              <DailyRoutine userRole={userRole} />
               <MoodHistoryChart />
               <SmartwatchSync />
               <NotificationHistoryChart notifications={notifications} />

@@ -1,0 +1,146 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { generateDailyRoutine, type GenerateDailyRoutineOutput } from '@/ai/flows/generate-daily-routine';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useToast } from '@/hooks/use-toast';
+import { CalendarPlus, AlertTriangle, Sparkles, Sunrise, Coffee, BrainCircuit, BedDouble, BookOpen, Dumbbell, Salad, Briefcase, DraftingCompass } from 'lucide-react';
+import type { LucideProps } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface DailyRoutineProps {
+  userRole: string;
+}
+
+const iconMap: { [key: string]: React.ElementType<LucideProps> } = {
+  Sunrise,
+  Coffee,
+  BrainCircuit,
+  BedDouble,
+  BookOpen,
+  Dumbbell,
+  Salad,
+  Briefcase,
+  DraftingCompass,
+  default: Sparkles,
+};
+
+const RoutineIcon = ({ name, className }: { name: string, className?: string }) => {
+  const Icon = iconMap[name] || iconMap.default;
+  return <Icon className={cn("h-6 w-6", className)} />;
+};
+
+
+export function DailyRoutine({ userRole }: DailyRoutineProps) {
+  const [routine, setRoutine] = useState<GenerateDailyRoutineOutput | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchRoutine = async () => {
+      if (!userRole) return;
+      setIsLoading(true);
+      setError(null);
+      try {
+        const result = await generateDailyRoutine({ userRole });
+        setRoutine(result);
+      } catch (err) {
+        console.error("Failed to generate daily routine:", err);
+        setError("Could not generate a personalized routine at this time. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchRoutine();
+  }, [userRole]);
+
+  const handleAddToCalendar = () => {
+    toast({
+      title: "Feature Coming Soon!",
+      description: "Google Calendar integration is planned for a future update.",
+    });
+  };
+  
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="font-headline flex items-center gap-2">
+            <Sparkles className="h-6 w-6 text-primary" />
+            Personalized Daily Routine
+        </CardTitle>
+        <CardDescription>
+            {isLoading ? <Skeleton className="h-4 w-3/4" /> : routine?.title || 'A plan to help you thrive.'}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4 min-h-[200px]">
+        {isLoading && (
+          <div className="space-y-6 pt-2">
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-10 w-24 rounded-md" />
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-48" />
+              </div>
+            </div>
+             <div className="flex items-center gap-4">
+              <Skeleton className="h-10 w-24 rounded-md" />
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-3 w-40" />
+              </div>
+            </div>
+             <div className="flex items-center gap-4">
+              <Skeleton className="h-10 w-24 rounded-md" />
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-48" />
+              </div>
+            </div>
+          </div>
+        )}
+        {error && (
+            <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+            </Alert>
+        )}
+        {routine && (
+          <div className="relative">
+             <div className="absolute left-10 top-2 bottom-2 w-0.5 bg-border -z-10" />
+             <ul className="space-y-6">
+                {routine.routine.map((item, index) => (
+                    <li key={index} className="flex items-start gap-4">
+                        <div className="w-20 text-right">
+                            <p className="text-sm font-semibold text-primary">{item.time.split(' - ')[0]}</p>
+                            <p className="text-xs text-muted-foreground">{item.time.split(' - ')[1]}</p>
+                        </div>
+                        <div className="flex-shrink-0 z-10 p-2 bg-background border rounded-full">
+                           <RoutineIcon name={item.icon} className="text-primary" />
+                        </div>
+                        <div className="flex-1">
+                            <p className="font-semibold">{item.activity}</p>
+                            <p className="text-sm text-muted-foreground">{item.description}</p>
+                        </div>
+                    </li>
+                ))}
+             </ul>
+          </div>
+        )}
+      </CardContent>
+      <CardFooter>
+        <Button className="w-full" onClick={handleAddToCalendar}>
+            <CalendarPlus className="mr-2" />
+            Add to Google Calendar
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
