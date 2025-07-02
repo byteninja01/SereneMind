@@ -32,14 +32,6 @@ export interface AppNotification {
   time: Date;
 }
 
-const REMINDER_MESSAGES = [
-  "Remember to drink some water. Stay hydrated!",
-  "Feeling stressed? Take a few deep breaths. You are in control.",
-  "Stay positive! A good attitude can make all the difference.",
-  "Take a short break to stretch and reset your mind.",
-  "Be kind to yourself today. You deserve it."
-];
-
 export default function DashboardPage() {
   const [mood, setMood] = useState<Mood | null>(null);
   const [journal, setJournal] = useState('');
@@ -78,10 +70,10 @@ export default function DashboardPage() {
     
     const intervalId = setInterval(() => {
       setNotifications(prev => [...prev, {
-        message: REMINDER_MESSAGES[Math.floor(Math.random() * REMINDER_MESSAGES.length)],
+        message: "Time for a water break! Staying hydrated is key.",
         time: new Date()
       }]);
-    }, 30000); // 30 seconds
+    }, 60000); // 1 minute
 
     // Add a welcome message from the bot
     setChatMessages(prev => {

@@ -5,12 +5,14 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter }
 import { Button } from '@/components/ui/button';
 import { HeartPulse, Bed, Footprints, Watch, Bluetooth, BluetoothConnected, BluetoothSearching, Loader2 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/hooks/use-toast';
 
 type SyncStatus = 'disconnected' | 'connecting' | 'syncing' | 'connected';
 
 export function SmartwatchSync() {
   const [status, setStatus] = useState<SyncStatus>('disconnected');
   const [progress, setProgress] = useState(0);
+  const { toast } = useToast();
 
   const handleConnect = () => {
     setStatus('connecting');
@@ -31,10 +33,14 @@ export function SmartwatchSync() {
     if (status === 'syncing') {
       const syncTimeout = setTimeout(() => {
         setStatus('connected');
+        toast({
+          title: 'Successfully Connected!',
+          description: 'You are successfully connceted!!!',
+        });
       }, 1500);
       return () => clearTimeout(syncTimeout);
     }
-  }, [status]);
+  }, [status, toast]);
 
 
   const handleDisconnect = () => {
