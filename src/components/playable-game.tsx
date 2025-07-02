@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { PartyPopper, Target } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface PlayableGameProps {
   instructions: string;
@@ -14,6 +15,7 @@ export function PlayableGame({ instructions }: PlayableGameProps) {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
   const [gameState, setGameState] = useState<'ready' | 'playing' | 'finished'>('ready');
+  const { toast } = useToast();
 
   useEffect(() => {
     if (gameState !== 'playing' || timeLeft <= 0) return;
@@ -28,8 +30,18 @@ export function PlayableGame({ instructions }: PlayableGameProps) {
   useEffect(() => {
     if (timeLeft === 0 && gameState === 'playing') {
       setGameState('finished');
+      const stressReduced = Math.floor(Math.random() * 15) + 5; // 5-19%
+      toast({
+        title: (
+          <div className="flex items-center gap-2">
+            <PartyPopper className="h-5 w-5 text-yellow-500" />
+            <span>Great Job!</span>
+          </div>
+        ),
+        description: `You've boosted your focus and reduced stress by ${stressReduced}%.`,
+      });
     }
-  }, [timeLeft, gameState]);
+  }, [timeLeft, gameState, toast]);
 
 
   const handleStart = () => {
