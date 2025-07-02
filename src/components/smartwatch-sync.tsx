@@ -35,7 +35,7 @@ export function SmartwatchSync() {
         setStatus('connected');
         toast({
           title: 'Successfully Connected!',
-          description: 'You are successfully connceted!!!',
+          description: 'Your smartwatch is successfully connected.',
         });
       }, 1500);
       return () => clearTimeout(syncTimeout);

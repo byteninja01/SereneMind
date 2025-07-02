@@ -104,12 +104,8 @@ For each suggested activity, provide:
 - 'duration' (optional, in seconds): For 'movement' or 'mindfulness' types.
 - 'details' (optional): For 'music' type, provide a YouTube playlist idea. For 'game', give simple game instructions. For 'movie', provide a movie title. For 'pinterest', provide a Pinterest search query for calming images (e.g., "calm nature photography").
 
-Your entire response must be a single JSON object.
-{{#if journalEntry}}
-The JSON object must contain the 'analysis' and 'suggestions' properties.
-{{else}}
-The JSON object must contain only the 'suggestions' property.
-{{/if}}
+Your entire response must be a single JSON object that strictly follows the output schema.
+If no journal entry is provided, the 'analysis' property should be omitted from the output.
 `,
 });
 
