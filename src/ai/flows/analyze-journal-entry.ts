@@ -11,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const AnalyzeJournalEntryInputSchema = z.object({
+const AnalyzeJournalEntryInputSchema = z.object({
   journalEntry: z.string().describe('The journal entry to analyze.'),
   mood: z.string().describe('The current mood of the user (e.g., happy, sad, anxious).'),
   userRole: z.string().describe('The primary role of the user (e.g., student, teacher, employee).'),
@@ -19,7 +19,7 @@ export const AnalyzeJournalEntryInputSchema = z.object({
 export type AnalyzeJournalEntryInput = z.infer<typeof AnalyzeJournalEntryInputSchema>;
 
 
-export const AnalysisSchema = z.object({
+const AnalysisSchema = z.object({
   feedbackSummary: z.string().describe('A short feedback summary of the journal entry.'),
   emotionalTags: z.array(z.string()).describe('A list of emotional tags identified in the journal entry.'),
 });
@@ -35,14 +35,14 @@ const ActivitySchema = z.object({
     details: z.string().optional().describe("Specific details for the activity. For 'music' type, provide a YouTube playlist idea. For 'game' type, provide simple game instructions.")
 });
 
-export const SuggestionsSchema = z.object({
+const SuggestionsSchema = z.object({
   activities: z.array(ActivitySchema).describe('A list of suggested self-care activities.'),
   reasoning: z.string().describe('The AI reasoning behind suggesting these activities.'),
 });
 export type Suggestions = z.infer<typeof SuggestionsSchema>;
 
 
-export const AnalyzeJournalEntryOutputSchema = z.object({
+const AnalyzeJournalEntryOutputSchema = z.object({
   analysis: AnalysisSchema,
   suggestions: SuggestionsSchema,
   isFallback: z.boolean().optional().describe('Indicates if the response is a fallback due to system overload.'),
