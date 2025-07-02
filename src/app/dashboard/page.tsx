@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { analyzeJournalEntry, type Analysis, type AnalyzeJournalEntryOutput } from '@/ai/flows/analyze-journal-entry';
-import { suggestSelfCareActivities, type SuggestSelfCareActivitiesOutput } from '@/ai/flows/suggest-self-care-activities';
 import { chat, type ChatOutput } from '@/ai/flows/chat';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { MoodSelector, type Mood } from '@/components/mood-selector';
@@ -45,7 +44,7 @@ export default function DashboardPage() {
   const [mood, setMood] = useState<Mood | null>(null);
   const [journal, setJournal] = useState('');
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
-  const [suggestions, setSuggestions] = useState<SuggestSelfCareActivitiesOutput | null>(null);
+  const [suggestions, setSuggestions] = useState<AnalyzeJournalEntryOutput['suggestions'] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
@@ -118,13 +117,14 @@ export default function DashboardPage() {
     setIsLoading(true);
 
     try {
-      const suggestionsResult = await suggestSelfCareActivities({
+      const result = await analyzeJournalEntry({
         mood: selectedMood.name,
-        journalContent: '',
         userRole: userRole,
       });
-      setSuggestions(suggestionsResult);
-      if (suggestionsResult.isFallback) {
+
+      setSuggestions(result.suggestions);
+
+      if (result.isFallback) {
         toast({
           title: 'AI is a bit busy!',
           description: "We're showing some sample suggestions for now. Please try refining with a journal entry later.",
@@ -157,12 +157,8 @@ export default function DashboardPage() {
         userRole: userRole,
       });
 
-      setAnalysis(result.analysis);
-      setSuggestions({
-        activities: result.suggestions.activities,
-        reasoning: result.suggestions.reasoning,
-        isFallback: result.isFallback
-      });
+      setAnalysis(result.analysis || null);
+      setSuggestions(result.suggestions);
 
       if (result.isFallback) {
         toast({
