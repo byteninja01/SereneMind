@@ -91,6 +91,8 @@ Based on the user's role and mood, perform one task:
 1.  **Suggest Personalized Self-Care Activities**: Suggest a list of 3 personalized self-care activities. Also provide your reasoning. This goes in the 'suggestions' object.
 {{/if}}
 
+Ensure a variety of activity types in your suggestions. For example, if the user is feeling sad, a comforting movie could be a good suggestion. For a low-energy mood, suggest browsing calming images on Pinterest. This will help provide a diverse set of options.
+
 For all suggestions, tailor them based on the user's role:
 - If the user is a 'student', suggest activities for focus, stress management, and effective study breaks.
 - If the user is a 'teacher', suggest activities for unwinding, managing classroom stress, and work-life balance.
