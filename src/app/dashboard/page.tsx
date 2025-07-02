@@ -56,6 +56,7 @@ export default function DashboardPage() {
   const [isChatLoading, setIsChatLoading] = useState(false);
   const [chatCooldown, setChatCooldown] = useState(0);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [salutation, setSalutation] = useState('');
@@ -113,6 +114,13 @@ export default function DashboardPage() {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [chatMessages]);
+
+  useEffect(() => {
+    // Scroll to suggestions when they appear
+    if (suggestions && suggestionsRef.current) {
+      suggestionsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [suggestions]);
 
   useEffect(() => {
     if (chatCooldown > 0) {
@@ -306,14 +314,16 @@ export default function DashboardPage() {
               </Card>
 
               {mood && (
-                <JournalEditor
-                  mood={mood}
-                  onJournalSubmit={handleJournalSubmit}
-                  analysis={analysis}
-                  suggestions={suggestions}
-                  isLoading={isLoading}
-                  onTaskComplete={handleTaskComplete}
-                />
+                <div ref={suggestionsRef}>
+                  <JournalEditor
+                    mood={mood}
+                    onJournalSubmit={handleJournalSubmit}
+                    analysis={analysis}
+                    suggestions={suggestions}
+                    isLoading={isLoading}
+                    onTaskComplete={handleTaskComplete}
+                  />
+                </div>
               )}
             </div>
 
