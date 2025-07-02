@@ -7,9 +7,10 @@ import { useToast } from '@/hooks/use-toast';
 
 interface TimerProps {
   duration: number; // in seconds
+  onComplete: () => void;
 }
 
-export function Timer({ duration }: TimerProps) {
+export function Timer({ duration, onComplete }: TimerProps) {
   const [timeLeft, setTimeLeft] = useState(duration);
   const [isActive, setIsActive] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -41,6 +42,7 @@ export function Timer({ duration }: TimerProps) {
         ),
         description: `You've reduced your stress by ${stressReduced}%. Great job!`,
       });
+      onComplete();
     }
 
     return () => {
@@ -48,7 +50,7 @@ export function Timer({ duration }: TimerProps) {
         clearInterval(interval);
       }
     };
-  }, [isActive, timeLeft, toast]);
+  }, [isActive, timeLeft, toast, onComplete]);
 
   const toggleTimer = () => {
     if (isCompleted) return;

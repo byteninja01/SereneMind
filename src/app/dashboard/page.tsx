@@ -18,6 +18,7 @@ import { Smile, Loader2, User, LogOut } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { DailyRoutine } from '@/components/daily-routine';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Confetti } from '@/components/confetti';
 
 
 // Define interface for chat messages
@@ -60,6 +61,7 @@ export default function DashboardPage() {
   const [salutation, setSalutation] = useState('');
   const [quote, setQuote] = useState<{ text: string; author: string } | null>(null);
   const router = useRouter();
+  const [showConfetti, setShowConfetti] = useState(false);
 
 
   useEffect(() => {
@@ -118,6 +120,10 @@ export default function DashboardPage() {
       return () => clearTimeout(timerId);
     }
   }, [chatCooldown]);
+
+  const handleTaskComplete = () => {
+    setShowConfetti(true);
+  };
 
   const handleMoodSelect = async (selectedMood: Mood) => {
     if (!userRole) return;
@@ -248,6 +254,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
+      <Confetti fire={showConfetti} onComplete={() => setShowConfetti(false)} />
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center">
           <div className="mr-4 flex items-center">
@@ -305,6 +312,7 @@ export default function DashboardPage() {
                   analysis={analysis}
                   suggestions={suggestions}
                   isLoading={isLoading}
+                  onTaskComplete={handleTaskComplete}
                 />
               )}
             </div>

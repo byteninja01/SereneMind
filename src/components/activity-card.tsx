@@ -12,6 +12,7 @@ type ActivityType = AnalyzeJournalEntryOutput['suggestions']['activities'][0];
 
 interface ActivityCardProps {
   activity: ActivityType;
+  onTaskComplete: () => void;
 }
 
 const iconMap: { [key: string]: React.ElementType } = {
@@ -40,7 +41,7 @@ const ActivityIcon = ({ name }: { name: string }) => {
   return <Icon className="h-6 w-6 text-accent-foreground" />;
 };
 
-export function ActivityCard({ activity }: ActivityCardProps) {
+export function ActivityCard({ activity, onTaskComplete }: ActivityCardProps) {
     const hasTimer = (activity.type === 'movement' || activity.type === 'mindfulness') && activity.duration && activity.duration > 0;
     
     return (
@@ -129,13 +130,13 @@ export function ActivityCard({ activity }: ActivityCardProps) {
                                 <DialogDescription>{activity.description}</DialogDescription>
                             </DialogHeader>
                              <div className="mt-4">
-                                <PlayableGame instructions={activity.details} />
+                                <PlayableGame instructions={activity.details} onComplete={onTaskComplete} />
                             </div>
                         </DialogContent>
                     </Dialog>
                 )}
 
-                {hasTimer && <Timer duration={activity.duration!} />}
+                {hasTimer && <Timer duration={activity.duration!} onComplete={onTaskComplete} />}
             </div>
       </div>
     );

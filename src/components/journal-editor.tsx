@@ -17,6 +17,7 @@ interface JournalEditorProps {
   analysis: Analysis | null;
   suggestions: AnalyzeJournalEntryOutput['suggestions'] | null;
   isLoading: boolean;
+  onTaskComplete: () => void;
 }
 
 export function JournalEditor({
@@ -25,6 +26,7 @@ export function JournalEditor({
   analysis,
   suggestions,
   isLoading,
+  onTaskComplete,
 }: JournalEditorProps) {
   const [journalText, setJournalText] = useState('');
 
@@ -105,7 +107,7 @@ export function JournalEditor({
             </CardHeader>
             <CardContent className="grid gap-4">
               {suggestions.activities.map((activity, index) => (
-                <ActivityCard key={index} activity={activity} />
+                <ActivityCard key={index} activity={activity} onTaskComplete={onTaskComplete} />
               ))}
             </CardContent>
           </Card>

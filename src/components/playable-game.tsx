@@ -7,11 +7,12 @@ import { useToast } from '@/hooks/use-toast';
 
 interface PlayableGameProps {
   instructions: string;
+  onComplete: () => void;
 }
 
 const GAME_DURATION = 15; // 15 seconds
 
-export function PlayableGame({ instructions }: PlayableGameProps) {
+export function PlayableGame({ instructions, onComplete }: PlayableGameProps) {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
   const [gameState, setGameState] = useState<'ready' | 'playing' | 'finished'>('ready');
@@ -40,8 +41,9 @@ export function PlayableGame({ instructions }: PlayableGameProps) {
         ),
         description: `You've boosted your focus and reduced stress by ${stressReduced}%.`,
       });
+      onComplete();
     }
-  }, [timeLeft, gameState, toast]);
+  }, [timeLeft, gameState, toast, onComplete]);
 
 
   const handleStart = () => {
