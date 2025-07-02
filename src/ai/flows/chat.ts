@@ -22,7 +22,7 @@ const ChatOutputSchema = z.object({
 export type ChatOutput = z.infer<typeof ChatOutputSchema>;
 
 const fallbackResponse: ChatOutput = {
-    response: "I'm experiencing a high volume of requests right now and need a moment to catch my breath. Please try again in a little bit!",
+    response: "My circuits are a bit busy at the moment! I'm still here to listen, but my AI responses are on a short break. Please try again in a moment.",
     isFallback: true,
 };
 
