@@ -27,12 +27,12 @@ export type Analysis = z.infer<typeof AnalysisSchema>;
 
 
 const ActivitySchema = z.object({
-    name: z.string().describe('The name of the activity, e.g., "5-Minute Guided Meditation", "Listen to a calming playlist", "Quick Desk Stretch".'),
+    name: z.string().describe('The name of the activity, e.g., "5-Minute Guided Meditation", "Watch a comforting movie", "Browse calming images".'),
     description: z.string().describe('A short, encouraging description of the activity and why it might be helpful.'),
-    icon: z.string().describe(`A single, relevant lucide-react icon name for the activity. Choose from this specific list: 'BookOpen', 'Wind', 'Music', 'PenSquare', 'StretchVertical', 'Sparkles', 'Coffee', 'Film', 'Smile', 'Leaf', 'Heart', 'Gamepad2', 'Brain', 'Clock', 'Users', 'Brush'`),
-    type: z.enum(['music', 'movement', 'game', 'mindfulness', 'creative', 'social']).describe("The category of the activity."),
+    icon: z.string().describe(`A single, relevant lucide-react icon name for the activity. Choose from this specific list: 'BookOpen', 'Wind', 'Music', 'PenSquare', 'StretchVertical', 'Sparkles', 'Coffee', 'Film', 'Smile', 'Leaf', 'Heart', 'Gamepad2', 'Brain', 'Clock', 'Users', 'Brush', 'Image'`),
+    type: z.enum(['music', 'movement', 'game', 'mindfulness', 'creative', 'social', 'movie', 'pinterest']).describe("The category of the activity."),
     duration: z.number().optional().describe("The duration for timer-based activities in seconds (e.g., 300 for 5 minutes)."),
-    details: z.string().optional().describe("Specific details for the activity. For 'music' type, provide a YouTube playlist idea. For 'game' type, provide simple game instructions.")
+    details: z.string().optional().describe("Specific details for the activity. For 'music' type, provide a YouTube playlist idea. For 'game' type, provide simple game instructions. For 'movie' type, provide the movie title. For 'pinterest' type, provide a search query for calming images.")
 });
 
 const SuggestionsSchema = z.object({
@@ -98,11 +98,11 @@ For all suggestions, tailor them based on the user's role:
 
 For each suggested activity, provide:
 - 'name': Descriptive name.
-- 'type': 'music', 'movement', 'game', 'mindfulness', 'creative', or 'social'.
+- 'type': 'music', 'movement', 'game', 'mindfulness', 'creative', 'social', 'movie', or 'pinterest'.
 - 'description': Short, encouraging description.
-- 'icon': A relevant icon from this list: 'BookOpen', 'Wind', 'Music', 'PenSquare', 'StretchVertical', 'Sparkles', 'Coffee', 'Film', 'Smile', 'Leaf', 'Heart', 'Gamepad2', 'Brain', 'Clock', 'Users', 'Brush'.
+- 'icon': A relevant icon from this list: 'BookOpen', 'Wind', 'Music', 'PenSquare', 'StretchVertical', 'Sparkles', 'Coffee', 'Film', 'Smile', 'Leaf', 'Heart', 'Gamepad2', 'Brain', 'Clock', 'Users', 'Brush', 'Image'.
 - 'duration' (optional, in seconds): For 'movement' or 'mindfulness' types.
-- 'details' (optional): YouTube playlist idea for 'music', or simple game instructions for 'game'.
+- 'details' (optional): For 'music' type, provide a YouTube playlist idea. For 'game', give simple game instructions. For 'movie', provide a movie title. For 'pinterest', provide a Pinterest search query for calming images (e.g., "calm nature photography").
 
 Your entire response must be a single JSON object.
 {{#if journalEntry}}

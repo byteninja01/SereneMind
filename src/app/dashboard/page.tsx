@@ -32,6 +32,16 @@ export interface AppNotification {
   time: Date;
 }
 
+const quotes = [
+    { text: "The best way to predict the future is to create it.", author: "Peter Drucker" },
+    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+    { text: "Your time is limited, don't waste it living someone else's life.", author: "Steve Jobs" },
+    { text: "The mind is everything. What you think you become.", author: "Buddha" },
+    { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+    { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+    { text: "Self-care is how you take your power back.", author: "Lalah Delia" }
+];
+
 export default function DashboardPage() {
   const [mood, setMood] = useState<Mood | null>(null);
   const [journal, setJournal] = useState('');
@@ -47,6 +57,8 @@ export default function DashboardPage() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
+  const [salutation, setSalutation] = useState('');
+  const [quote, setQuote] = useState<{ text: string; author: string } | null>(null);
   const router = useRouter();
 
 
@@ -64,6 +76,13 @@ export default function DashboardPage() {
     
     setUserRole(role);
     setUserName(name);
+
+    // Set salutation and quote
+    const hour = new Date().getHours();
+    if (hour < 12) setSalutation('Good Morning');
+    else if (hour < 18) setSalutation('Good Afternoon');
+    else setSalutation('Good Evening');
+    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
 
     // Set initial reminder
     setNotifications([{ message: "Welcome! We'll send you reminders here.", time: new Date() }]);
@@ -256,12 +275,23 @@ export default function DashboardPage() {
       </header>
       <main className="flex-1">
         <div className="container py-8">
+            <div className="mb-8 text-center">
+                <h2 className="text-3xl font-bold font-headline">
+                    {salutation}, <span className="capitalize">{userName}</span>!
+                </h2>
+                {quote && (
+                    <p className="text-muted-foreground mt-2 italic">
+                        &ldquo;{quote.text}&rdquo; &ndash; {quote.author}
+                    </p>
+                )}
+            </div>
+
           <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-3">
             <div className="lg:col-span-2 grid gap-8">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-headline text-2xl">How are you feeling today, {userName}?</CardTitle>
-                  <CardDescription>Select your current mood to get started.</CardDescription>
+                  <CardTitle className="font-headline text-2xl">How are you feeling today?</CardTitle>
+                  <CardDescription>Select your current mood to get personalized suggestions.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <MoodSelector onMoodSelect={handleMoodSelect} selectedMood={mood} />

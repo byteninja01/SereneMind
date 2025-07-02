@@ -1,14 +1,14 @@
 'use client';
 
-import type { SuggestSelfCareActivitiesOutput } from '@/ai/flows/suggest-self-care-activities';
+import type { AnalyzeJournalEntryOutput } from '@/ai/flows/analyze-journal-entry';
 import { Timer } from './timer';
-import { BookOpen, Wind, Music, PenSquare, StretchVertical, Sparkles, Coffee, Film, Smile, Leaf, Heart, Gamepad2, Brain, Clock, Activity, Youtube, Users, Brush } from 'lucide-react';
+import { BookOpen, Wind, Music, PenSquare, StretchVertical, Sparkles, Coffee, Film, Smile, Leaf, Heart, Gamepad2, Brain, Clock, Activity, Youtube, Users, Brush, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { PlayableGame } from './playable-game';
 
 
-type ActivityType = SuggestSelfCareActivitiesOutput['activities'][0];
+type ActivityType = AnalyzeJournalEntryOutput['suggestions']['activities'][0];
 
 interface ActivityCardProps {
   activity: ActivityType;
@@ -31,6 +31,7 @@ const iconMap: { [key: string]: React.ElementType } = {
   Clock,
   Users,
   Brush,
+  Image,
   default: Activity,
 };
 
@@ -65,6 +66,48 @@ export function ActivityCard({ activity }: ActivityCardProps) {
                                     <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
                                         <Youtube className="mr-2" />
                                         Find on YouTube
+                                    </a>
+                                </Button>
+                            </div>
+                        )
+                    })()
+                )}
+
+                 {activity.type === 'movie' && activity.details && (
+                    (() => {
+                        const query = encodeURIComponent(`${activity.details} movie`);
+                        const googleUrl = `https://www.google.com/search?q=${query}`;
+
+                        return (
+                            <div className="mt-2 space-y-2">
+                                <div className="text-sm bg-secondary/30 p-3 rounded-md border border-secondary">
+                                    <p><strong>Movie Suggestion:</strong> {activity.details}</p>
+                                </div>
+                                <Button variant="outline" size="sm" asChild>
+                                    <a href={googleUrl} target="_blank" rel="noopener noreferrer">
+                                        <Film className="mr-2" />
+                                        Find on Google
+                                    </a>
+                                </Button>
+                            </div>
+                        )
+                    })()
+                )}
+
+                {activity.type === 'pinterest' && activity.details && (
+                    (() => {
+                        const query = encodeURIComponent(activity.details);
+                        const pinterestUrl = `https://www.pinterest.com/search/pins/?q=${query}`;
+
+                        return (
+                            <div className="mt-2 space-y-2">
+                                <div className="text-sm bg-secondary/30 p-3 rounded-md border border-secondary">
+                                    <p><strong>Image Idea:</strong> {activity.details}</p>
+                                </div>
+                                <Button variant="outline" size="sm" asChild>
+                                    <a href={pinterestUrl} target="_blank" rel="noopener noreferrer">
+                                        <Image className="mr-2" />
+                                        Browse on Pinterest
                                     </a>
                                 </Button>
                             </div>
