@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { AnalyzeJournalEntryOutput } from '@/ai/flows/analyze-journal-entry';
+import type { Analysis } from '@/ai/flows/analyze-journal-entry';
 import type { SuggestSelfCareActivitiesOutput } from '@/ai/flows/suggest-self-care-activities';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,7 +15,7 @@ import { Skeleton } from './ui/skeleton';
 interface JournalEditorProps {
   mood: Mood;
   onJournalSubmit: (journalText: string) => void;
-  analysis: AnalyzeJournalEntryOutput | null;
+  analysis: Analysis | null;
   suggestions: SuggestSelfCareActivitiesOutput | null;
   isLoading: boolean;
 }

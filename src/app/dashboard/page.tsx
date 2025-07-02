@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { analyzeJournalEntry, type AnalyzeJournalEntryOutput } from '@/ai/flows/analyze-journal-entry';
+import { analyzeJournalEntry, type Analysis, type AnalyzeJournalEntryOutput } from '@/ai/flows/analyze-journal-entry';
 import { suggestSelfCareActivities, type SuggestSelfCareActivitiesOutput } from '@/ai/flows/suggest-self-care-activities';
 import { chat, type ChatOutput } from '@/ai/flows/chat';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
@@ -44,7 +44,7 @@ const REMINDER_MESSAGES = [
 export default function DashboardPage() {
   const [mood, setMood] = useState<Mood | null>(null);
   const [journal, setJournal] = useState('');
-  const [analysis, setAnalysis] = useState<AnalyzeJournalEntryOutput | null>(null);
+  const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [suggestions, setSuggestions] = useState<SuggestSelfCareActivitiesOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -151,13 +151,20 @@ export default function DashboardPage() {
     setSuggestions(null);
 
     try {
-      const [analysisResult, suggestionsResult] = await Promise.all([
-        analyzeJournalEntry({ journalEntry: journalText }),
-        suggestSelfCareActivities({ mood: mood.name, journalContent: journalText, userRole: userRole }),
-      ]);
-      setAnalysis(analysisResult);
-      setSuggestions(suggestionsResult);
-      if (analysisResult.isFallback || suggestionsResult.isFallback) {
+      const result = await analyzeJournalEntry({ 
+        journalEntry: journalText,
+        mood: mood.name,
+        userRole: userRole,
+      });
+
+      setAnalysis(result.analysis);
+      setSuggestions({
+        activities: result.suggestions.activities,
+        reasoning: result.suggestions.reasoning,
+        isFallback: result.isFallback
+      });
+
+      if (result.isFallback) {
         toast({
             title: 'AI is a bit busy!',
             description: "We're showing sample feedback and suggestions due to high demand. Your journal entry was saved.",
