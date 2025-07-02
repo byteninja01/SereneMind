@@ -95,7 +95,7 @@ export default function DashboardPage() {
         message: "Time for a water break! Staying hydrated is key.",
         time: new Date()
       }]);
-    }, 60000); // 1 minute
+    }, 50000); // 50 seconds
 
     // Add a welcome message from the bot
     setChatMessages(prev => {
