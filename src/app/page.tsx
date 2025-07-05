@@ -52,11 +52,13 @@ export default function LoginPage() {
       </header>
       <main className="flex-1 flex flex-col items-center justify-center py-12 px-4">
         <div className="container max-w-6xl w-full grid md:grid-cols-2 gap-12 items-center">
-          <div className="hidden md:flex h-full w-full items-center justify-center min-h-[400px]">
-            {isClient ? (
-              // @ts-ignore
-              <spline-viewer url="https://prod.spline.design/napX6h3K9jjqqXdW/scene.splinecode"></spline-viewer>
-            ) : null}
+          <div className="hidden md:flex h-full w-full items-center justify-center">
+            <div className="w-full h-full max-w-[450px] max-h-[450px] aspect-square">
+              {isClient ? (
+                // @ts-ignore
+                <spline-viewer url="https://prod.spline.design/napX6h3K9jjqqXdW/scene.splinecode"></spline-viewer>
+              ) : null}
+            </div>
           </div>
           <Card className="w-full max-w-md shadow-lg mx-auto md:mx-0">
             <CardHeader>
