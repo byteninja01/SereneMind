@@ -13,7 +13,7 @@ import { Testimonials } from '@/components/testimonials';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const Spline = dynamic(() => import('@splinetool/react-spline'), {
+const Spline = dynamic(() => import('@splinetool/react-spline/next'), {
   ssr: false,
   loading: () => <Skeleton className="w-full h-full rounded-2xl" />,
 });
