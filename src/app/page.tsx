@@ -54,12 +54,10 @@ export default function LoginPage() {
       </header>
       <main className="flex-1 flex flex-col items-center justify-center py-12 px-4">
         <div className="container grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-16">
-          <div className="w-full h-[400px] lg:h-[600px] rounded-lg order-2 lg:order-1">
-             <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-card">
-                 <Spline
-                    scene="https://prod.spline.design/sq2n0y3Zv4keZ89G/scene.splinecode" 
-                  />
-             </div>
+          <div className="w-full h-[400px] lg:h-[600px] rounded-2xl overflow-hidden shadow-2xl bg-card order-2 lg:order-1">
+             <Spline
+                scene="https://prod.spline.design/sq2n0y3Zv4keZ89G/scene.splinecode" 
+              />
           </div>
           <div className="order-1 lg:order-2">
             <Card className="w-full max-w-md shadow-lg mx-auto">
