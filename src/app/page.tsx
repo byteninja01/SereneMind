@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -11,11 +10,6 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Testimonials } from '@/components/testimonials';
-
-// Dynamically import the Spline component to prevent SSR issues
-const Spline = dynamic(() => import('@splinetool/react-spline'), {
-  ssr: false,
-});
 
 
 export default function LoginPage() {
@@ -53,84 +47,79 @@ export default function LoginPage() {
         </div>
       </header>
       <main className="flex-1 flex flex-col items-center justify-center py-12 px-4">
-        <div className="grid lg:grid-cols-2 gap-8 items-center max-w-6xl w-full">
-            <div className="h-[400px] lg:h-[500px] w-full flex items-center justify-center">
-                <Spline scene="https://prod.spline.design/5OB-vTV2uOf6dZ7z/scene.splinecode" />
+        <Card className="w-full max-w-md shadow-lg mx-auto">
+          <CardHeader>
+            <CardTitle className="font-headline text-2xl text-center">Welcome to SereneMind</CardTitle>
+            <CardDescription className="text-center">First, let's get to know you a little better.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid w-full items-center gap-2">
+                <Label htmlFor="name-input">What should we call you?</Label>
+                <Input 
+                    id="name-input" 
+                    placeholder="Enter your name..." 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)}
+                />
             </div>
-            <Card className="w-full max-w-md shadow-lg mx-auto">
-              <CardHeader>
-                <CardTitle className="font-headline text-2xl text-center">Welcome to SereneMind</CardTitle>
-                <CardDescription className="text-center">First, let's get to know you a little better.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid w-full items-center gap-2">
-                    <Label htmlFor="name-input">What should we call you?</Label>
-                    <Input 
-                        id="name-input" 
-                        placeholder="Enter your name..." 
-                        value={name} 
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                </div>
-                <div className="grid w-full items-center gap-2">
-                    <Label htmlFor="age-input">How old are you?</Label>
-                    <Input 
-                        id="age-input" 
-                        type="number"
-                        placeholder="Enter your age..." 
-                        value={age} 
-                        onChange={(e) => setAge(e.target.value)}
-                    />
-                </div>
-                <div className="grid w-full items-center gap-2">
-                    <Label htmlFor="gender-select">What is your gender?</Label>
-                    <Select value={gender} onValueChange={setGender}>
-                        <SelectTrigger id="gender-select">
-                            <SelectValue placeholder="Select your gender..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="male">Male</SelectItem>
-                            <SelectItem value="female">Female</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                            <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="grid w-full items-center gap-2">
-                    <Label htmlFor="phone-input">What is your phone number?</Label>
-                    <Input 
-                        id="phone-input" 
-                        type="tel"
-                        maxLength={10}
-                        placeholder="Enter your 10-digit phone number..." 
-                        value={phone} 
-                        onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
-                    />
-                    <p className="text-xs text-muted-foreground">We'll use this to send you friendly reminders (feature simulation).</p>
-                </div>
-                <div className="grid w-full items-center gap-2">
-                    <Label htmlFor="role-select">Tell us your primary role</Label>
-                    <Select value={role} onValueChange={setRole}>
-                        <SelectTrigger id="role-select">
-                            <SelectValue placeholder="Select your role..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="student">Student</SelectItem>
-                            <SelectItem value="teacher">Teacher</SelectItem>
-                            <SelectItem value="employee">Employee</SelectItem>
-                            <SelectItem value="business owner">Business Owner</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full" onClick={handleContinue} disabled={isContinueDisabled}>
-                  Continue to Dashboard
-                </Button>
-              </CardFooter>
-            </Card>
-        </div>
+            <div className="grid w-full items-center gap-2">
+                <Label htmlFor="age-input">How old are you?</Label>
+                <Input 
+                    id="age-input" 
+                    type="number"
+                    placeholder="Enter your age..." 
+                    value={age} 
+                    onChange={(e) => setAge(e.target.value)}
+                />
+            </div>
+            <div className="grid w-full items-center gap-2">
+                <Label htmlFor="gender-select">What is your gender?</Label>
+                <Select value={gender} onValueChange={setGender}>
+                    <SelectTrigger id="gender-select">
+                        <SelectValue placeholder="Select your gender..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+            <div className="grid w-full items-center gap-2">
+                <Label htmlFor="phone-input">What is your phone number?</Label>
+                <Input 
+                    id="phone-input" 
+                    type="tel"
+                    maxLength={10}
+                    placeholder="Enter your 10-digit phone number..." 
+                    value={phone} 
+                    onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
+                />
+                <p className="text-xs text-muted-foreground">We'll use this to send you friendly reminders (feature simulation).</p>
+            </div>
+            <div className="grid w-full items-center gap-2">
+                <Label htmlFor="role-select">Tell us your primary role</Label>
+                <Select value={role} onValueChange={setRole}>
+                    <SelectTrigger id="role-select">
+                        <SelectValue placeholder="Select your role..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="student">Student</SelectItem>
+                        <SelectItem value="teacher">Teacher</SelectItem>
+                        <SelectItem value="employee">Employee</SelectItem>
+                        <SelectItem value="business owner">Business Owner</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button className="w-full" onClick={handleContinue} disabled={isContinueDisabled}>
+              Continue to Dashboard
+            </Button>
+          </CardFooter>
+        </Card>
         <Testimonials />
       </main>
     </div>
