@@ -6,21 +6,21 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 const testimonialsData = [
     {
         quote: "SereneMind has completely changed how I approach my mental wellness. The personalized suggestions are a game-changer for a busy teacher like me.",
-        name: "Ujjwal",
+        name: "Yash",
         role: "Teacher",
         avatar: "https://placehold.co/40x40.png",
         hint: "woman portrait"
     },
     {
         quote: "As a student, the daily routine feature helps me stay organized and focused. The little games are a great way to take a quick break between study sessions.",
-        name: "Ojus",
+        name: "Akshatj",
         role: "Student",
         avatar: "https://placehold.co/40x40.png",
         hint: "man student"
     },
     {
         quote: "The journaling and AI feedback have given me insights I never would have discovered on my own. It's like having a supportive friend available 24/7.",
-        name: "Tarini",
+        name: "Swayam",
         role: "Employee",
         avatar: "https://placehold.co/40x40.png",
         hint: "person smiling"
