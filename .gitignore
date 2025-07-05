@@ -42,4 +42,16 @@ next-env.d.ts
 
 # firebase
 firebase-debug.log
-firestore-debug.log
+firestore-debug.l
+
+
+/node_modules
+/.next
+.firebase
+.env
+firebase-debug.log
+.DS_Store
+
+git checkout -b website
+
+git remote add origin https://github.com/byteninja01/Serenity.git
