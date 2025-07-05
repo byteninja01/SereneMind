@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
@@ -17,7 +17,12 @@ export default function LoginPage() {
   const [phone, setPhone] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleContinue = () => {
     if (role && name.trim() && phone.trim().length === 10 && age && gender) {
@@ -48,8 +53,10 @@ export default function LoginPage() {
       <main className="flex-1 flex flex-col items-center justify-center py-12 px-4">
         <div className="container max-w-6xl w-full grid md:grid-cols-2 gap-12 items-center">
           <div className="hidden md:flex h-full w-full items-center justify-center min-h-[400px]">
-            {/* @ts-ignore */}
-            <spline-viewer url="https://prod.spline.design/sq2n0y3Zv4keZ89G/scene.splinecode"></spline-viewer>
+            {isClient ? (
+              // @ts-ignore
+              <spline-viewer url="https://prod.spline.design/sq2n0y3Zv4keZ89G/scene.splinecode"></spline-viewer>
+            ) : null}
           </div>
           <Card className="w-full max-w-md shadow-lg mx-auto md:mx-0">
             <CardHeader>
