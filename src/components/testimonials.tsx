@@ -1,7 +1,7 @@
 "use client"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 
 const testimonialsData = [
     {
@@ -35,9 +35,9 @@ export function Testimonials() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {testimonialsData.map((testimonial, index) => (
                  <Card key={index} className="text-left bg-card/50">
-                    <CardHeader>
+                    <CardContent className="pt-6">
                         <blockquote className="italic">"{testimonial.quote}"</blockquote>
-                    </CardHeader>
+                    </CardContent>
                     <CardFooter className="flex items-center gap-3">
                          <Avatar>
                             <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.hint} />
