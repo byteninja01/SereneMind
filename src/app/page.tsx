@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -11,13 +12,11 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Testimonials } from '@/components/testimonials';
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'spline-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & { url: string };
-    }
-  }
-}
+// Dynamically import the Spline component to prevent SSR issues
+const Spline = dynamic(() => import('@splinetool/react-spline'), {
+  ssr: false,
+});
+
 
 export default function LoginPage() {
   const [role, setRole] = useState('');
@@ -26,11 +25,6 @@ export default function LoginPage() {
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const handleContinue = () => {
     if (role && name.trim() && phone.trim().length === 10 && age && gender) {
@@ -60,10 +54,8 @@ export default function LoginPage() {
       </header>
       <main className="flex-1 flex flex-col items-center justify-center py-12 px-4">
         <div className="grid lg:grid-cols-2 gap-8 items-center max-w-6xl w-full">
-            <div className="flex items-center justify-center h-[400px] lg:h-[500px] w-full">
-                {isClient && (
-                  <spline-viewer url="https://prod.spline.design/sq2n0y3Zv4keZ89G/scene.splinecode"></spline-viewer>
-                )}
+            <div className="h-[400px] lg:h-[500px] w-full flex items-center justify-center">
+                <Spline scene="https://prod.spline.design/5OB-vTV2uOf6dZ7z/scene.splinecode" />
             </div>
             <Card className="w-full max-w-md shadow-lg mx-auto">
               <CardHeader>
