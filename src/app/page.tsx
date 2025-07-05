@@ -10,7 +10,13 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Testimonials } from '@/components/testimonials';
-import Spline from '@splinetool/react-spline/next';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const Spline = dynamic(() => import('@splinetool/react-spline'), {
+  ssr: false,
+  loading: () => <Skeleton className="w-full h-full rounded-2xl" />,
+});
 
 export default function LoginPage() {
   const [role, setRole] = useState('');
