@@ -55,7 +55,7 @@ export default function LoginPage() {
           <div className="hidden md:flex h-full w-full items-center justify-center min-h-[400px]">
             {isClient ? (
               // @ts-ignore
-              <spline-viewer url="https://prod.spline.design/sq2n0y3Zv4keZ89G/scene.splinecode"></spline-viewer>
+              <spline-viewer url="undefined"></spline-viewer>
             ) : null}
           </div>
           <Card className="w-full max-w-md shadow-lg mx-auto md:mx-0">
