@@ -60,9 +60,9 @@ export default function LoginPage() {
       </header>
       <main className="flex-1 flex flex-col items-center justify-center py-12 px-4">
         <div className="grid lg:grid-cols-2 gap-8 items-center max-w-6xl w-full">
-            <div className="hidden lg:flex items-center justify-center h-[500px] w-full">
+            <div className="flex items-center justify-center h-[400px] lg:h-[500px] w-full">
                 {isClient && (
-                  <spline-viewer url="https://prod.spline.design/6Wq1Qh2uJ2QKWfU8/scene.splinecode"></spline-viewer>
+                  <spline-viewer url="https://prod.spline.design/sq2n0y3Zv4keZ89G/scene.splinecode"></spline-viewer>
                 )}
             </div>
             <Card className="w-full max-w-md shadow-lg mx-auto">
