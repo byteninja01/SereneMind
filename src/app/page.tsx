@@ -46,79 +46,85 @@ export default function LoginPage() {
         </div>
       </header>
       <main className="flex-1 flex flex-col items-center justify-center py-12 px-4">
-        <Card className="w-full max-w-md shadow-lg mx-auto">
-          <CardHeader>
-            <CardTitle className="font-headline text-2xl text-center">Welcome to SereneMind</CardTitle>
-            <CardDescription className="text-center">First, let's get to know you a little better.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-             <div className="grid w-full items-center gap-2">
-                <Label htmlFor="name-input">What should we call you?</Label>
-                <Input 
-                    id="name-input" 
-                    placeholder="Enter your name..." 
-                    value={name} 
-                    onChange={(e) => setName(e.target.value)}
-                />
-             </div>
-             <div className="grid w-full items-center gap-2">
-                <Label htmlFor="age-input">How old are you?</Label>
-                <Input 
-                    id="age-input" 
-                    type="number"
-                    placeholder="Enter your age..." 
-                    value={age} 
-                    onChange={(e) => setAge(e.target.value)}
-                />
-             </div>
-             <div className="grid w-full items-center gap-2">
-                <Label htmlFor="gender-select">What is your gender?</Label>
-                <Select value={gender} onValueChange={setGender}>
-                    <SelectTrigger id="gender-select">
-                        <SelectValue placeholder="Select your gender..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                        <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
-                    </SelectContent>
-                </Select>
-             </div>
-             <div className="grid w-full items-center gap-2">
-                <Label htmlFor="phone-input">What is your phone number?</Label>
-                <Input 
-                    id="phone-input" 
-                    type="tel"
-                    maxLength={10}
-                    placeholder="Enter your 10-digit phone number..." 
-                    value={phone} 
-                    onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
-                />
-                <p className="text-xs text-muted-foreground">We'll use this to send you friendly reminders (feature simulation).</p>
-             </div>
-             <div className="grid w-full items-center gap-2">
-                <Label htmlFor="role-select">Tell us your primary role</Label>
-                <Select value={role} onValueChange={setRole}>
-                    <SelectTrigger id="role-select">
-                        <SelectValue placeholder="Select your role..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="student">Student</SelectItem>
-                        <SelectItem value="teacher">Teacher</SelectItem>
-                        <SelectItem value="employee">Employee</SelectItem>
-                        <SelectItem value="business owner">Business Owner</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                </Select>
-             </div>
-          </CardContent>
-          <CardFooter>
-            <Button className="w-full" onClick={handleContinue} disabled={isContinueDisabled}>
-              Continue to Dashboard
-            </Button>
-          </CardFooter>
-        </Card>
+        <div className="container max-w-6xl w-full grid md:grid-cols-2 gap-12 items-center">
+          <div className="hidden md:flex h-full w-full items-center justify-center min-h-[400px]">
+            {/* @ts-ignore */}
+            <spline-viewer url="https://prod.spline.design/5OB-vTV2uOf6dZ7z/scene.splinecode"></spline-viewer>
+          </div>
+          <Card className="w-full max-w-md shadow-lg mx-auto md:mx-0">
+            <CardHeader>
+              <CardTitle className="font-headline text-2xl text-center">Welcome to SereneMind</CardTitle>
+              <CardDescription className="text-center">First, let's get to know you a little better.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid w-full items-center gap-2">
+                  <Label htmlFor="name-input">What should we call you?</Label>
+                  <Input 
+                      id="name-input" 
+                      placeholder="Enter your name..." 
+                      value={name} 
+                      onChange={(e) => setName(e.target.value)}
+                  />
+              </div>
+              <div className="grid w-full items-center gap-2">
+                  <Label htmlFor="age-input">How old are you?</Label>
+                  <Input 
+                      id="age-input" 
+                      type="number"
+                      placeholder="Enter your age..." 
+                      value={age} 
+                      onChange={(e) => setAge(e.target.value)}
+                  />
+              </div>
+              <div className="grid w-full items-center gap-2">
+                  <Label htmlFor="gender-select">What is your gender?</Label>
+                  <Select value={gender} onValueChange={setGender}>
+                      <SelectTrigger id="gender-select">
+                          <SelectValue placeholder="Select your gender..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                          <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                      </SelectContent>
+                  </Select>
+              </div>
+              <div className="grid w-full items-center gap-2">
+                  <Label htmlFor="phone-input">What is your phone number?</Label>
+                  <Input 
+                      id="phone-input" 
+                      type="tel"
+                      maxLength={10}
+                      placeholder="Enter your 10-digit phone number..." 
+                      value={phone} 
+                      onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
+                  />
+                  <p className="text-xs text-muted-foreground">We'll use this to send you friendly reminders (feature simulation).</p>
+              </div>
+              <div className="grid w-full items-center gap-2">
+                  <Label htmlFor="role-select">Tell us your primary role</Label>
+                  <Select value={role} onValueChange={setRole}>
+                      <SelectTrigger id="role-select">
+                          <SelectValue placeholder="Select your role..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                          <SelectItem value="student">Student</SelectItem>
+                          <SelectItem value="teacher">Teacher</SelectItem>
+                          <SelectItem value="employee">Employee</SelectItem>
+                          <SelectItem value="business owner">Business Owner</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                  </Select>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button className="w-full" onClick={handleContinue} disabled={isContinueDisabled}>
+                Continue to Dashboard
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
         <Testimonials />
       </main>
     </div>
