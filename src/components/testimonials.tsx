@@ -13,7 +13,7 @@ const testimonialsData = [
     },
     {
         quote: "As a student, the daily routine feature helps me stay organized and focused. The little games are a great way to take a quick break between study sessions.",
-        name: "Akshatj",
+        name: "Akshat",
         role: "Student",
         avatar: "https://placehold.co/40x40.png",
         hint: "man student"
