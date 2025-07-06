@@ -43,6 +43,15 @@ const quotes = [
     { text: "Self-care is how you take your power back.", author: "Lalah Delia" }
 ];
 
+const reminderMessages = [
+  "Time for a water break! Staying hydrated is key.",
+  "Take a moment to stretch your legs and back.",
+  "Rest your eyes for 20 seconds by looking at something 20 feet away.",
+  "Think of one thing you're grateful for right now.",
+  "A short walk can do wonders for your mood and focus.",
+  "Take a few deep, slow breaths to center yourself."
+];
+
 export default function DashboardPage() {
   const [mood, setMood] = useState<Mood | null>(null);
   const [journal, setJournal] = useState('');
@@ -88,11 +97,12 @@ export default function DashboardPage() {
     setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
 
     // Set initial reminder
-    setNotifications([{ message: "Welcome! We'll send you reminders here.", time: new Date() }]);
+    setNotifications([{ message: "Welcome! We'll send you friendly reminders here to help you through your day.", time: new Date() }]);
     
     const intervalId = setInterval(() => {
+      const randomMessage = reminderMessages[Math.floor(Math.random() * reminderMessages.length)];
       setNotifications(prev => [...prev, {
-        message: "Time for a water break! Staying hydrated is key.",
+        message: randomMessage,
         time: new Date()
       }]);
     }, 20000); // 20 seconds
@@ -106,7 +116,7 @@ export default function DashboardPage() {
     });
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     // Scroll to the bottom of the chat container when new messages are added
