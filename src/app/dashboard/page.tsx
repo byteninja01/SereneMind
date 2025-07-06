@@ -14,7 +14,7 @@ import { SmartwatchSync } from '@/components/smartwatch-sync';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Logo } from '@/components/icons';
 import { useToast } from '@/hooks/use-toast';
-import { Smile, Loader2, User, LogOut } from 'lucide-react';
+import { Smile, Loader2, User, LogOut, Bell } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { DailyRoutine } from '@/components/daily-routine';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -95,7 +95,7 @@ export default function DashboardPage() {
         message: "Time for a water break! Staying hydrated is key.",
         time: new Date()
       }]);
-    }, 50000); // 50 seconds
+    }, 20000); // 20 seconds
 
     // Add a welcome message from the bot
     setChatMessages(prev => {
@@ -106,7 +106,7 @@ export default function DashboardPage() {
     });
 
     return () => clearInterval(intervalId);
-  }, [router]);
+  }, []);
 
   useEffect(() => {
     // Scroll to the bottom of the chat container when new messages are added
@@ -335,7 +335,7 @@ export default function DashboardPage() {
               <Card className="bg-accent/50 border-accent">
                 <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
                   <div className="bg-accent rounded-full p-2">
-                    <Smile className="h-6 w-6 text-accent-foreground" />
+                    <Bell className="h-6 w-6 text-accent-foreground" />
                   </div>
                   <CardTitle className="font-headline">A Quick Reminder</CardTitle>
                 </CardHeader>
