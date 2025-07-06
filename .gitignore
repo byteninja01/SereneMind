@@ -52,6 +52,16 @@ firestore-debug.l
 firebase-debug.log
 .DS_Store
 
-git checkout -b website
 
+# Step-by-step GitHub push script (for 'website' branch)
+echo "🔥 Starting GitHub push setup..."
+
+git init
+git checkout -b website
 git remote add origin https://github.com/byteninja01/Serenity.git
+git add .
+git commit -m "Initial push from Firebase Studio to GitHub (website branch)"
+git push -u origin website
+
+echo "✅ Code pushed to GitHub → https://github.com/byteninja01/Serenity/tree/website"
+
