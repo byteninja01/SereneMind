@@ -14,7 +14,7 @@ import { SmartwatchSync } from '@/components/smartwatch-sync';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Logo } from '@/components/icons';
 import { useToast } from '@/hooks/use-toast';
-import { Smile, Loader2, User, LogOut, Bell, Phone, Users, PhoneCall } from 'lucide-react';
+import { Smile, Loader2, User, LogOut, Bell, Phone, Users, PhoneCall, Send, Bug, Bird, Fish, Shell } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { DailyRoutine } from '@/components/daily-routine';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -29,6 +29,17 @@ interface ChatMessage {
   text: string;
   sender: 'user' | 'bot';
 }
+
+// Define interface for community chat messages
+interface CommunityMessage {
+    id: number;
+    text: string;
+    sender: {
+        name: string;
+        icon: React.ElementType;
+    };
+}
+
 
 export interface AppNotification {
   message: string;
@@ -60,6 +71,22 @@ const therapists = [
     { name: 'Dr. Olivia Chen', specialty: 'Anxiety & Relationship Counseling', avatar: 'https://i.pravatar.cc/150?img=3' },
 ];
 
+const anonymousUsers = [
+    { name: "Anonymous Bug", icon: Bug },
+    { name: "Anonymous Bird", icon: Bird },
+    { name: "Anonymous Fish", icon: Fish },
+    { name: "Anonymous Shell", icon: Shell },
+];
+
+const initialCommunityMessages: CommunityMessage[] = [
+    { id: 1, text: "Feeling a bit overwhelmed today, but trying to push through.", sender: anonymousUsers[0] },
+    { id: 2, text: "Just wanted to say you're not alone. We're all in this together.", sender: anonymousUsers[1] },
+    { id: 3, text: "I find that a short walk outside really helps clear my head.", sender: anonymousUsers[2] },
+    { id: 4, text: "Thank you for sharing that. It's nice to know I'm not the only one.", sender: anonymousUsers[0] },
+    { id: 5, text: "Has anyone tried the 5-minute meditation? It really worked for me!", sender: anonymousUsers[3]},
+];
+
+
 export default function DashboardPage() {
   const [mood, setMood] = useState<Mood | null>(null);
   const [journal, setJournal] = useState('');
@@ -73,6 +100,7 @@ export default function DashboardPage() {
   const [isChatLoading, setIsChatLoading] = useState(false);
   const [chatCooldown, setChatCooldown] = useState(0);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const communityChatContainerRef = useRef<HTMLDivElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
@@ -80,6 +108,9 @@ export default function DashboardPage() {
   const [quote, setQuote] = useState<{ text: string; author: string } | null>(null);
   const router = useRouter();
   const [showConfetti, setShowConfetti] = useState(false);
+  const [communityMessages, setCommunityMessages] = useState<CommunityMessage[]>(initialCommunityMessages);
+  const [communityInput, setCommunityInput] = useState('');
+  const [myAnonymousIdentity] = useState(() => anonymousUsers[Math.floor(Math.random() * anonymousUsers.length)]);
 
 
   useEffect(() => {
@@ -132,6 +163,13 @@ export default function DashboardPage() {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [chatMessages]);
+  
+  useEffect(() => {
+    // Scroll community chat
+    if (communityChatContainerRef.current) {
+      communityChatContainerRef.current.scrollTop = communityChatContainerRef.current.scrollHeight;
+    }
+  }, [communityMessages]);
 
   useEffect(() => {
     // Scroll to suggestions when they appear
@@ -259,6 +297,19 @@ export default function DashboardPage() {
     }
   };
   
+  const handleSendCommunityMessage = () => {
+    if (communityInput.trim() === '') return;
+
+    const newMessage: CommunityMessage = {
+      id: communityMessages.length + 1,
+      text: communityInput.trim(),
+      sender: myAnonymousIdentity,
+    };
+
+    setCommunityMessages(prev => [...prev, newMessage]);
+    setCommunityInput('');
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('userRole');
     localStorage.removeItem('userName');
@@ -267,13 +318,6 @@ export default function DashboardPage() {
     localStorage.removeItem('userGender');
     router.push('/');
   }
-
-  const handleFeatureComingSoon = (featureName: string) => {
-    toast({
-      title: `${featureName} Coming Soon!`,
-      description: `We're working hard to bring this feature to you.`,
-    });
-  };
   
   const handleTherapistCall = (therapistName: string) => {
     toast({
@@ -362,7 +406,6 @@ export default function DashboardPage() {
             <div className="lg:col-span-1 grid gap-8 auto-rows-min">
               <DailyRoutine userRole={userRole} />
               
-              {/* Talk to a Therapist Card */}
                 <Card>
                     <CardHeader>
                         <CardTitle className="font-headline flex items-center gap-2">
@@ -416,24 +459,62 @@ export default function DashboardPage() {
                     </CardFooter>
                 </Card>
 
-              {/* Community Chat Card */}
                <Card>
-                <CardHeader>
-                    <CardTitle className="font-headline flex items-center gap-2">
-                        <Users className="h-6 w-6 text-primary" />
-                        Join Community Chat
-                    </CardTitle>
-                    <CardDescription>Connect with others in a safe, anonymous space.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-sm text-muted-foreground">Share your thoughts and experiences with a supportive community. You are not alone.</p>
-                </CardContent>
-                <CardFooter>
-                    <Button className="w-full" onClick={() => handleFeatureComingSoon('Community Chat')}>
-                        Join Community
-                    </Button>
-                </CardFooter>
-              </Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline flex items-center gap-2">
+                            <Users className="h-6 w-6 text-primary" />
+                            Join Community Chat
+                        </CardTitle>
+                        <CardDescription>Connect with others in a safe, anonymous space.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground">Share your thoughts and experiences with a supportive community. You are not alone.</p>
+                    </CardContent>
+                    <CardFooter>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button className="w-full">Join Community</Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-md flex flex-col h-[70vh]">
+                                <DialogHeader>
+                                    <DialogTitle>Anonymous Community Chat</DialogTitle>
+                                    <DialogDescription>
+                                        You are chatting as <span className="font-bold">{myAnonymousIdentity.name}</span>. All messages are ephemeral and not stored.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div ref={communityChatContainerRef} className="flex-1 flex flex-col gap-4 overflow-y-auto border p-4 rounded-md bg-muted/20 my-4">
+                                    {communityMessages.map((msg) => {
+                                        const isYou = msg.sender.name === myAnonymousIdentity.name;
+                                        const Icon = msg.sender.icon;
+                                        return (
+                                            <div key={msg.id} className={`flex items-start gap-3 max-w-[85%] ${isYou ? 'self-end flex-row-reverse' : 'self-start'}`}>
+                                                <Avatar className="w-8 h-8 border">
+                                                    <AvatarFallback>
+                                                        <Icon className="h-5 w-5 text-muted-foreground" />
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className={`p-3 rounded-lg text-sm ${isYou ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+                                                    <p className="font-bold text-xs mb-1">{msg.sender.name}</p>
+                                                    <p>{msg.text}</p>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                                <div className="flex gap-2">
+                                    <Input
+                                        type="text"
+                                        placeholder="Type your message..."
+                                        value={communityInput}
+                                        onChange={(e) => setCommunityInput(e.target.value)}
+                                        onKeyPress={(e) => { if (e.key === 'Enter') handleSendCommunityMessage(); }}
+                                    />
+                                    <Button onClick={handleSendCommunityMessage}><Send /></Button>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                    </CardFooter>
+                </Card>
 
               <MoodHistoryChart />
               <SmartwatchSync />
@@ -450,7 +531,6 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* Basic Chat Interface Card */}
               <Card className="flex flex-col">
                 <CardHeader>
                   <CardTitle className="font-headline">Chat with Me</CardTitle>
