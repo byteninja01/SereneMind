@@ -377,8 +377,7 @@ export default function DashboardPage() {
                 )}
             </div>
 
-          <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-3">
-            <div className="lg:col-span-2 grid gap-8">
+            <div className="grid gap-8 grid-cols-1">
               <Card>
                 <CardHeader>
                   <CardTitle className="font-headline text-2xl">How are you feeling today?</CardTitle>
@@ -403,19 +402,52 @@ export default function DashboardPage() {
               )}
             </div>
 
-            <div className="lg:col-span-1 grid gap-8 auto-rows-min">
-              <DailyRoutine userRole={userRole} />
-              
-                <Card>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mt-8">
+              <div className="lg:col-span-1 md:col-span-2">
+                  <DailyRoutine userRole={userRole} />
+              </div>
+              <Card className="flex flex-col">
+                <CardHeader>
+                  <CardTitle className="font-headline">Chat with Me</CardTitle>
+                  <CardDescription>Your friendly companion is here to listen.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col flex-1 gap-4">
+                  <div ref={chatContainerRef} className="flex-1 flex flex-col gap-3 h-72 overflow-y-auto border p-4 rounded-md bg-muted/20">
+                    {chatMessages.map((msg) => (
+                      <div key={msg.id} className={`max-w-[80%] p-3 rounded-lg text-sm ${msg.sender === 'user' ? 'bg-primary text-primary-foreground self-end' : 'bg-secondary text-secondary-foreground self-start'}`}>
+                        {msg.text}
+                      </div>
+                    ))}
+                     {isChatLoading && (
+                      <div className="self-start flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Thinking...</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <Input
+                      type="text"
+                      placeholder={chatCooldown > 0 ? `Please wait ${chatCooldown}s...` : "Type your message..."}
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyPress={(e) => { if (e.key === 'Enter') handleSendChatMessage(); }}
+                      disabled={isChatLoading || chatCooldown > 0}
+                    />
+                    <Button onClick={handleSendChatMessage} disabled={isChatLoading || chatCooldown > 0}>Send</Button>
+                  </div>
+                </CardContent>
+              </Card>
+              <div className="grid gap-8 auto-rows-min">
+                 <Card>
                     <CardHeader>
                         <CardTitle className="font-headline flex items-center gap-2">
                             <Phone className="h-6 w-6 text-primary" />
                             Talk to a Therapist
                         </CardTitle>
-                        <CardDescription>Get professional support when you need it.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-sm text-muted-foreground">Our certified therapists are available 24/7 to provide confidential help. It's a brave step to seek support.</p>
+                        <p className="text-sm text-muted-foreground">Our certified therapists are available 24/7 to provide confidential help.</p>
                     </CardContent>
                     <CardFooter>
                        <Dialog>
@@ -463,17 +495,16 @@ export default function DashboardPage() {
                     <CardHeader>
                         <CardTitle className="font-headline flex items-center gap-2">
                             <Users className="h-6 w-6 text-primary" />
-                            Join Community Chat
+                            Join Community
                         </CardTitle>
-                        <CardDescription>Connect with others in a safe, anonymous space.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-sm text-muted-foreground">Share your thoughts and experiences with a supportive community. You are not alone.</p>
+                        <p className="text-sm text-muted-foreground">Share your thoughts and connect with others in a safe, anonymous space.</p>
                     </CardContent>
                     <CardFooter>
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button className="w-full">Join Community</Button>
+                                <Button className="w-full">Join Chat</Button>
                             </DialogTrigger>
                             <DialogContent className="max-w-md flex flex-col h-[70vh]">
                                 <DialogHeader>
@@ -515,58 +546,18 @@ export default function DashboardPage() {
                         </Dialog>
                     </CardFooter>
                 </Card>
+              </div>
+            </div>
 
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mt-8">
               <MoodHistoryChart />
               <SmartwatchSync />
               <NotificationHistoryChart notifications={notifications} />
-              <Card className="bg-accent/50 border-accent">
-                <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
-                  <div className="bg-accent rounded-full p-2">
-                    <Bell className="h-6 w-6 text-accent-foreground" />
-                  </div>
-                  <CardTitle className="font-headline">A Quick Reminder</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">{latestNotification?.message}</p>
-                </CardContent>
-              </Card>
-
-              <Card className="flex flex-col">
-                <CardHeader>
-                  <CardTitle className="font-headline">Chat with Me</CardTitle>
-                  <CardDescription>Your friendly companion is here to listen.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col flex-1 gap-4">
-                  <div ref={chatContainerRef} className="flex-1 flex flex-col gap-3 h-72 overflow-y-auto border p-4 rounded-md bg-muted/20">
-                    {chatMessages.map((msg) => (
-                      <div key={msg.id} className={`max-w-[80%] p-3 rounded-lg text-sm ${msg.sender === 'user' ? 'bg-primary text-primary-foreground self-end' : 'bg-secondary text-secondary-foreground self-start'}`}>
-                        {msg.text}
-                      </div>
-                    ))}
-                     {isChatLoading && (
-                      <div className="self-start flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Thinking...</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex gap-2">
-                    <Input
-                      type="text"
-                      placeholder={chatCooldown > 0 ? `Please wait ${chatCooldown}s...` : "Type your message..."}
-                      value={chatInput}
-                      onChange={(e) => setChatInput(e.target.value)}
-                      onKeyPress={(e) => { if (e.key === 'Enter') handleSendChatMessage(); }}
-                      disabled={isChatLoading || chatCooldown > 0}
-                    />
-                    <Button onClick={handleSendChatMessage} disabled={isChatLoading || chatCooldown > 0}>Send</Button>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
-          </div>
         </div>
       </main>
     </div>
   );
 }
+
+    
