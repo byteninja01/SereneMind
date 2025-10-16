@@ -30,16 +30,6 @@ export async function chat(input: ChatInput): Promise<ChatOutput> {
   return chatFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'chatPrompt',
-  input: {schema: ChatInputSchema},
-  output: {schema: ChatOutputSchema},
-  prompt: `You are MIndLink, a friendly and supportive AI companion. Your goal is to have a pleasant and encouraging conversation with the user. Keep your responses concise and helpful.
-
-User message: {{{message}}}
-`,
-});
-
 const chatFlow = ai.defineFlow(
   {
     name: 'chatFlow',
@@ -48,8 +38,19 @@ const chatFlow = ai.defineFlow(
   },
   async input => {
     try {
-        const {output} = await prompt(input);
-        return output!;
+        const llmResponse = await ai.generate({
+            prompt: `You are MIndLink, a friendly and supportive AI companion. Your goal is to have a pleasant and encouraging conversation with the user. Keep your responses concise and helpful.
+
+User message: ${input.message}
+`,
+            model: 'gemini-pro',
+            output: {
+                schema: ChatOutputSchema
+            }
+        });
+        
+        return llmResponse.output()!;
+
     } catch (e) {
         console.error("Error in chatFlow, returning fallback.", e);
         return fallbackResponse;
