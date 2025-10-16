@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { analyzeJournalEntry, type Analysis, type AnalyzeJournalEntryOutput } from '@/ai/flows/analyze-journal-entry';
 import { chat, type ChatOutput } from '@/ai/flows/chat';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { MoodSelector, type Mood } from '@/components/mood-selector';
 import { JournalEditor } from '@/components/journal-editor';
 import { MoodHistoryChart } from '@/components/mood-history-chart';
@@ -14,7 +14,7 @@ import { SmartwatchSync } from '@/components/smartwatch-sync';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Logo } from '@/components/icons';
 import { useToast } from '@/hooks/use-toast';
-import { Smile, Loader2, User, LogOut, Bell } from 'lucide-react';
+import { Smile, Loader2, User, LogOut, Bell, Phone, Users } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { DailyRoutine } from '@/components/daily-routine';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -260,6 +260,13 @@ export default function DashboardPage() {
     router.push('/');
   }
 
+  const handleFeatureComingSoon = (featureName: string) => {
+    toast({
+      title: `${featureName} Coming Soon!`,
+      description: `We're working hard to bring this feature to you.`,
+    });
+  };
+
   if (!userRole || !userName) {
       return (
           <div className="flex h-screen w-full items-center justify-center">
@@ -339,6 +346,45 @@ export default function DashboardPage() {
 
             <div className="lg:col-span-1 grid gap-8 auto-rows-min">
               <DailyRoutine userRole={userRole} />
+              
+              {/* Talk to a Therapist Card */}
+              <Card>
+                <CardHeader>
+                    <CardTitle className="font-headline flex items-center gap-2">
+                        <Phone className="h-6 w-6 text-primary" />
+                        Talk to a Therapist
+                    </CardTitle>
+                    <CardDescription>Get professional support when you need it.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Our certified therapists are available 24/7 to provide confidential help. It's a brave step to seek support.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleFeatureComingSoon('Therapist on call')}>
+                        Call Now
+                    </Button>
+                </CardFooter>
+              </Card>
+
+              {/* Community Chat Card */}
+               <Card>
+                <CardHeader>
+                    <CardTitle className="font-headline flex items-center gap-2">
+                        <Users className="h-6 w-6 text-primary" />
+                        Join Community Chat
+                    </CardTitle>
+                    <CardDescription>Connect with others in a safe, anonymous space.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Share your thoughts and experiences with a supportive community. You are not alone.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleFeatureComingSoon('Community Chat')}>
+                        Join Community
+                    </Button>
+                </CardFooter>
+              </Card>
+
               <MoodHistoryChart />
               <SmartwatchSync />
               <NotificationHistoryChart notifications={notifications} />
