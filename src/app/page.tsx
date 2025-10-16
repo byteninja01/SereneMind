@@ -39,7 +39,7 @@ export default function LoginPage() {
         <div className="container flex h-16 items-center">
           <div className="mr-4 flex items-center">
             <Logo className="h-8 w-8 mr-2 text-primary" />
-            <h1 className="text-xl font-bold font-headline">SereneMind</h1>
+            <h1 className="text-xl font-bold font-headline">MIndLink</h1>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2">
             <ThemeToggle />
@@ -49,7 +49,7 @@ export default function LoginPage() {
       <main className="flex-1 flex flex-col items-center justify-center py-12 px-4">
         <Card className="w-full max-w-md shadow-lg mx-auto">
           <CardHeader>
-            <CardTitle className="font-headline text-2xl text-center">Welcome to SereneMind</CardTitle>
+            <CardTitle className="font-headline text-2xl text-center">Welcome to MIndLink</CardTitle>
             <CardDescription className="text-center">First, let's get to know you a little better.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

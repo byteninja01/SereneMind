@@ -34,7 +34,7 @@ const prompt = ai.definePrompt({
   name: 'chatPrompt',
   input: {schema: ChatInputSchema},
   output: {schema: ChatOutputSchema},
-  prompt: `You are SereneMind, a friendly and supportive AI companion. Your goal is to have a pleasant and encouraging conversation with the user. Keep your responses concise and helpful.
+  prompt: `You are MIndLink, a friendly and supportive AI companion. Your goal is to have a pleasant and encouraging conversation with the user. Keep your responses concise and helpful.
 
 User message: {{{message}}}
 `,

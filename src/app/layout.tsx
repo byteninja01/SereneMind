@@ -20,7 +20,7 @@ const fontPtSans = PT_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'SereneMind',
+  title: 'MIndLink',
   description: 'Your personal AI-powered mental health and productivity companion.',
 };
 

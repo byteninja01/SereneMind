@@ -110,7 +110,7 @@ export default function DashboardPage() {
     // Add a welcome message from the bot
     setChatMessages(prev => {
         if(prev.length === 0){
-            return [{ id: 1, text: "Hello! I'm SereneMind, your friendly companion. How can I help you today?", sender: 'bot' }];
+            return [{ id: 1, text: "Hello! I'm MIndLink, your friendly companion. How can I help you today?", sender: 'bot' }];
         }
         return prev;
     });
@@ -277,7 +277,7 @@ export default function DashboardPage() {
         <div className="container flex h-16 items-center">
           <div className="mr-4 flex items-center">
             <Logo className="h-8 w-8 mr-2 text-primary" />
-            <h1 className="text-xl font-bold font-headline">SereneMind</h1>
+            <h1 className="text-xl font-bold font-headline">MIndLink</h1>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2">
             <DropdownMenu>
