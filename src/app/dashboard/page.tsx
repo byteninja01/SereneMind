@@ -14,11 +14,13 @@ import { SmartwatchSync } from '@/components/smartwatch-sync';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Logo } from '@/components/icons';
 import { useToast } from '@/hooks/use-toast';
-import { Smile, Loader2, User, LogOut, Bell, Phone, Users } from 'lucide-react';
+import { Smile, Loader2, User, LogOut, Bell, Phone, Users, PhoneCall } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { DailyRoutine } from '@/components/daily-routine';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Confetti } from '@/components/confetti';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
 // Define interface for chat messages
@@ -50,6 +52,12 @@ const reminderMessages = [
   "Think of one thing you're grateful for right now.",
   "A short walk can do wonders for your mood and focus.",
   "Take a few deep, slow breaths to center yourself."
+];
+
+const therapists = [
+    { name: 'Dr. Emily Carter', specialty: 'Cognitive Behavioral Therapy', avatar: 'https://i.pravatar.cc/150?img=1' },
+    { name: 'Dr. Ben Miller', specialty: 'Mindfulness & Stress Reduction', avatar: 'https://i.pravatar.cc/150?img=2' },
+    { name: 'Dr. Olivia Chen', specialty: 'Anxiety & Relationship Counseling', avatar: 'https://i.pravatar.cc/150?img=3' },
 ];
 
 export default function DashboardPage() {
@@ -266,6 +274,13 @@ export default function DashboardPage() {
       description: `We're working hard to bring this feature to you.`,
     });
   };
+  
+  const handleTherapistCall = (therapistName: string) => {
+    toast({
+      title: "Connecting...",
+      description: `Starting a simulated call with ${therapistName}.`,
+    });
+  }
 
   if (!userRole || !userName) {
       return (
@@ -348,23 +363,58 @@ export default function DashboardPage() {
               <DailyRoutine userRole={userRole} />
               
               {/* Talk to a Therapist Card */}
-              <Card>
-                <CardHeader>
-                    <CardTitle className="font-headline flex items-center gap-2">
-                        <Phone className="h-6 w-6 text-primary" />
-                        Talk to a Therapist
-                    </CardTitle>
-                    <CardDescription>Get professional support when you need it.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-sm text-muted-foreground">Our certified therapists are available 24/7 to provide confidential help. It's a brave step to seek support.</p>
-                </CardContent>
-                <CardFooter>
-                    <Button className="w-full" onClick={() => handleFeatureComingSoon('Therapist on call')}>
-                        Call Now
-                    </Button>
-                </CardFooter>
-              </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline flex items-center gap-2">
+                            <Phone className="h-6 w-6 text-primary" />
+                            Talk to a Therapist
+                        </CardTitle>
+                        <CardDescription>Get professional support when you need it.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground">Our certified therapists are available 24/7 to provide confidential help. It's a brave step to seek support.</p>
+                    </CardContent>
+                    <CardFooter>
+                       <Dialog>
+                            <DialogTrigger asChild>
+                                <Button className="w-full">
+                                    Call Now
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Connect with a Therapist</DialogTitle>
+                                    <DialogDescription>
+                                        Choose a therapist who feels right for you, or connect with the first available professional.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="space-y-4 py-4">
+                                    {therapists.map((therapist) => (
+                                        <div key={therapist.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-accent">
+                                            <div className="flex items-center gap-3">
+                                                <Avatar>
+                                                    <AvatarImage src={therapist.avatar} alt={therapist.name} />
+                                                    <AvatarFallback>{therapist.name.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                                <div>
+                                                    <p className="font-semibold">{therapist.name}</p>
+                                                    <p className="text-sm text-muted-foreground">{therapist.specialty}</p>
+                                                </div>
+                                            </div>
+                                            <Button variant="ghost" size="icon" onClick={() => handleTherapistCall(therapist.name)}>
+                                                <PhoneCall className="h-5 w-5 text-primary" />
+                                            </Button>
+                                        </div>
+                                    ))}
+                                </div>
+                                 <Button onClick={() => handleTherapistCall('any available therapist')}>
+                                    <PhoneCall className="mr-2" />
+                                    Connect to Any Available Therapist
+                                </Button>
+                            </DialogContent>
+                        </Dialog>
+                    </CardFooter>
+                </Card>
 
               {/* Community Chat Card */}
                <Card>
