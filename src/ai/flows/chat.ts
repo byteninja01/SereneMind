@@ -44,12 +44,9 @@ const chatFlow = ai.defineFlow(
 User message: ${input.message}
 `,
             model: 'gemini-pro',
-            output: {
-                schema: ChatOutputSchema
-            }
         });
         
-        return llmResponse.output()!;
+        return { response: llmResponse.text() };
 
     } catch (e) {
         console.error("Error in chatFlow, returning fallback.", e);
